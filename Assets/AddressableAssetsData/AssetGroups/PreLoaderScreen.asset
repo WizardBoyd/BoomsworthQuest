@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PreLoaderScreen
+  m_EditorClassIdentifier: 
+  m_GroupName: PreLoaderScreen
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 0fc294a171a0707418186304c9a8b8fc
+  m_SerializeEntries:
+  - m_GUID: a83b8db1325e1ef429f0897c008677ab
+    m_Address: PreLoadingScreen
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: bf8ec275a69209243b7ca72ed9cbd6f9, type: 2}
+    - {fileID: 11400000, guid: c976d3e96b2ddbe489749283fcb75fd8, type: 2}

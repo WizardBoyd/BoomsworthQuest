@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d461815c97074b18ae95fa6ab578f07c, type: 3}
+  m_Name: SaveSystem
+  m_EditorClassIdentifier: 
+  _saveSettingsEvent: {fileID: 11400000, guid: 4e0aceeee57006148a30a6d1d6baeaa2, type: 2}
+  _currentSettings: {fileID: 11400000, guid: 716ec2aaca63c3f49a449ed034d8d7ae, type: 2}
+  saveFilename: save.boom
+  backupSaveFilename: save.boom.bak
+  saveData:
+    _locationId: 
+    _itemStacks: []
+    _finishedQuestlineItemsGUIds: []
+    _masterVolume: 0
+    _musicVolume: 0
+    _sfxVolume: 0
+    _resolutionsIndex: 0
+    _antiAliasingIndex: 0
+    _shadowDistance: 0
+    _isFullscreen: 0
+    _currentLocale: {fileID: 0}
