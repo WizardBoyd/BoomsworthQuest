@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: a5553d4e1258d90499cdd28a6854d44f
+timeCreated: 1497828080
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - ConiferousBiomePrefab: {fileID: 1792324914579886, guid: 396266d01c937404580083f500f8cdb6,
+      type: 2}
+  - DesertBiomePrefab: {fileID: 1781861821157362, guid: 5c7eee114739f8942bb550e6913480f3,
+      type: 2}
+  - GreenForestBiomePrefab: {fileID: 1316549758685200, guid: abbd9e34f5bd5694785b376e909f7a55,
+      type: 2}
+  - JungleBiomePrefab: {fileID: 1137680879928446, guid: 95ce85da30ac61e4881994479ea66678,
+      type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
