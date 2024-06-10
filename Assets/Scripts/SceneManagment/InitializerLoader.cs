@@ -1,36 +1,34 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Events.ScriptableObjects;
 using SceneManagment.ScriptableObjects;
+using TaskManagment.Loading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+using TaskScheduler = TaskManagment.TaskScheduler;
 
 public class InitializerLoader : MonoBehaviour
 {
-    [SerializeField] private GameSceneSO _managersScene = default;
-    [SerializeField] private GameSceneSO _menuToLoad = default;
-
-    [Header("BroadCasting On")] [SerializeField]
-    private AssetReference _menuLoadChannel = default;
+    [SerializeField] private GameSceneSO _PersistentManagerScene = default;
     
     private void Start()
     {
-        _managersScene.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true).Completed += LoadEventChannel;
+        //Start Loading the Persistent Manager Scene
+        _PersistentManagerScene.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true).Completed += On_PersistentManagerSceneLoaded;
     }
 
-    private void LoadEventChannel(AsyncOperationHandle<SceneInstance> obj)
+    private async void On_PersistentManagerSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
     {
-        _menuLoadChannel.LoadAssetAsync<LoadEventChannelSO>().Completed += LoadLevelSelect;
+        SceneManager.UnloadSceneAsync(0);
     }
 
-    private void LoadLevelSelect(AsyncOperationHandle<LoadEventChannelSO> obj)
-    {
-      obj.Result.RaiseEvent(_menuToLoad,true);
-      SceneManager.UnloadSceneAsync(0);
-    }
-    
+
+
+
 }

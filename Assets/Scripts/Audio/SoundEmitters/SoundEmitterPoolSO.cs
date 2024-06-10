@@ -14,10 +14,6 @@ namespace Audio.SoundEmitters
             {
                 return _factory;
             }
-            set
-            {
-                _factory = value as SoundEmitterFactorySO;
-            }
         }
     }
 }

@@ -20,7 +20,7 @@ namespace SceneManagment.ScriptableObjects
             Initialisation,
             PersistentManagers,
             Gameplay,
-            LevelSelection,
+            MainMenu,
             
             //Status Scenes
             FailedLevelScene,

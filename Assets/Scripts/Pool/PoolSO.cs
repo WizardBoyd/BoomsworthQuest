@@ -14,7 +14,7 @@ namespace Pool
 		/// <summary>
 		/// The factory which will be used to create <typeparamref name="T"/> on demand.
 		/// </summary>
-		public abstract IFactory<T> Factory { get; set; }
+		public abstract IFactory<T> Factory { get; }
 		protected bool HasBeenPrewarmed { get; set; }
 
 		protected virtual T Create()

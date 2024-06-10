@@ -1,6 +1,6 @@
+using System;
 using System.Collections;
 using Events.ScriptableObjects;
-using Events.ScriptableObjects.UI;
 using Input;
 using SceneManagment.ScriptableObjects;
 using UnityEngine;
@@ -15,9 +15,10 @@ namespace SceneManagment
     /// This class manages the scene loading and unloading.
     /// </summary>
     public class SceneLoader : MonoBehaviour
-    {
-        [SerializeField] private GameSceneSO _gameplayScene = default;
-	[SerializeField] private InputReader _inputReader = default;
+    { 
+	    [SerializeField] private GameSceneSO _gameplayScene = default;
+	//[SerializeField] private InputReader _inputReader = default;
+	
 
 	[Header("Listening to")]
 	//[SerializeField] private LoadEventChannelSO _loadLocation = default;
@@ -27,7 +28,7 @@ namespace SceneManagment
 	[Header("Broadcasting on")]
 	[SerializeField] private BoolEventChannelSO _toggleLoadingScreen = default;
 	[SerializeField] private VoidEventChannelSO _onSceneReady = default; //picked up by the SpawnSystem
-	[SerializeField] private FadeChannelSO _fadeRequestChannel = default;
+	//[SerializeField] private FadeChannelSO _fadeRequestChannel = default;
 
 	private AsyncOperationHandle<SceneInstance> _loadingOperationHandle;
 	private AsyncOperationHandle<SceneInstance> _gameplayManagerLoadingOpHandle;
@@ -46,7 +47,7 @@ namespace SceneManagment
 		//_loadLocation.OnLoadingRequested += LoadLocation;
 		_loadMenu.OnLoadingRequested += LoadMenu;
 #if UNITY_EDITOR
-		_coldStartupLocation.OnLoadingRequested += LocationColdStartup;
+		//_coldStartupLocation.OnLoadingRequested += LocationColdStartup;
 #endif
 	}
 
@@ -55,7 +56,7 @@ namespace SceneManagment
 		//_loadLocation.OnLoadingRequested -= LoadLocation;
 		_loadMenu.OnLoadingRequested -= LoadMenu;
 #if UNITY_EDITOR
-		_coldStartupLocation.OnLoadingRequested -= LocationColdStartup;
+		//_coldStartupLocation.OnLoadingRequested -= LocationColdStartup;
 #endif
 	}
 
@@ -115,7 +116,7 @@ namespace SceneManagment
 	/// <summary>
 	/// Prepares to load the main menu scene, first removing the Gameplay scene in case the game is coming back from gameplay to menus.
 	/// </summary>
-	private void LoadMenu(GameSceneSO menuToLoad, bool showLoadingScreen, bool fadeScreen)
+	private void LoadMenu(GameSceneSO menuToLoad, bool showLoadingScreen, bool fadeScreen, Action[] actions)
 	{
 		//Prevent a double-loading, for situations where the player falls in two Exit colliders in one frame
 		if (_isLoading)
@@ -138,8 +139,8 @@ namespace SceneManagment
 	/// </summary>
 	private IEnumerator UnloadPreviousScene()
 	{
-		_inputReader.DisableAllInput();
-		_fadeRequestChannel.FadeOut(_fadeDuration);
+		// _inputReader.DisableAllInput();
+		// _fadeRequestChannel.FadeOut(_fadeDuration);
 
 		yield return new WaitForSeconds(_fadeDuration);
 
@@ -185,14 +186,13 @@ namespace SceneManagment
 
 		Scene s = obj.Result.Scene;
 		SceneManager.SetActiveScene(s);
-		LightProbes.TetrahedralizeAsync();
 
 		_isLoading = false;
 
 		if (_showLoadingScreen)
 			_toggleLoadingScreen.RaiseEvent(false);
 
-		_fadeRequestChannel.FadeIn(_fadeDuration);
+		//_fadeRequestChannel.FadeIn(_fadeDuration);
 
 		StartGameplay();
 	}

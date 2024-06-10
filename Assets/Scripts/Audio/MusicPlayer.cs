@@ -30,7 +30,7 @@ namespace Audio
 
         private void PlayMusic()
         {
-            _playMusicOn.RaisePlayEvent(_thisSceneSO.musicTrack, _audioConfig);
+            //_playMusicOn.RaisePlayEvent(_thisSceneSO.musicTrack, _audioConfig);
         }
 
         private void PlayPauseMusic(bool open)
