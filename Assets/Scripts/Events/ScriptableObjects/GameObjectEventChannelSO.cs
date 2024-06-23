@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/GameObject Event Channel")]
-    public class GameObjectEventChannelSO : DescriptionBaseSO
+    public class GameObjectEventChannelSO : ScriptableObject
     {
         public UnityAction<GameObject> OnEventRaised;
 	

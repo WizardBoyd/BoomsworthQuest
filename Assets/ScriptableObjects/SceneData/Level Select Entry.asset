@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26431830f2964013b5aed72657c640b6, type: 3}
+  m_Name: Level Select Entry
+  m_EditorClassIdentifier: 
+  SceneReference:
+    m_AssetGUID: fbef3508a7389b74b929f7b1913e72de
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  SceneType: 3
+  OnEnterSceneActions:
+  - {fileID: 11400000, guid: bb943c55996539644a3cc0bc9c49fb30, type: 2}
+  OnLeaveSceneActions: []

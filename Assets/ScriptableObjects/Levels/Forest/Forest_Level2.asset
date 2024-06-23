@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876c61e21a634df69e519ea201e02c2d, type: 3}
+  m_Name: Forest_Level2
+  m_EditorClassIdentifier: 
+  m_scene:
+    m_AssetGUID: f3debb5dafc3d6f4e8e535ee5c608fdf
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  m_levelIndex: 2
+  LevelCompletionStatus: 0

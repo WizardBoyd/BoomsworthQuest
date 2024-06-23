@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/Bool Event Channel")]
-    public class BoolEventChannelSO : DescriptionBaseSO
+    public class BoolEventChannelSO : ScriptableObject
     {
         public event UnityAction<bool> OnEventRaised;
 

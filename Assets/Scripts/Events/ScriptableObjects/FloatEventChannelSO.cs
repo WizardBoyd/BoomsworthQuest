@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/Float Event Channel")]
-    public class FloatEventChannelSO : DescriptionBaseSO
+    public class FloatEventChannelSO : ScriptableObject
     {
         public UnityAction<float> OnEventRaised;
 	

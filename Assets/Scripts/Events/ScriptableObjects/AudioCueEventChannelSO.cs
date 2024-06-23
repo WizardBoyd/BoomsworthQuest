@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/AudioCue Event Channel")]
-    public class AudioCueEventChannelSO : DescriptionBaseSO
+    public class AudioCueEventChannelSO : ScriptableObject
     {
         public AudioCuePlayAction OnAudioCuePlayRequested;
         public AudioCueStopAction OnAudioCueStopRequested;

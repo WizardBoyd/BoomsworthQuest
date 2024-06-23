@@ -16,6 +16,10 @@ using TaskScheduler = TaskManagment.TaskScheduler;
 public class InitializerLoader : MonoBehaviour
 {
     [SerializeField] private GameSceneSO _PersistentManagerScene = default;
+    [SerializeField] private GameSceneSO _MainGameSceneToLoad = default;
+
+    [Header("Broadcasting On")]
+    [SerializeField] private AssetReferenceT<LoadEventChannelSO> m_menuLoadChannel = null;
     
     private void Start()
     {
@@ -23,10 +27,18 @@ public class InitializerLoader : MonoBehaviour
         _PersistentManagerScene.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true).Completed += On_PersistentManagerSceneLoaded;
     }
 
-    private async void On_PersistentManagerSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
+    private void On_PersistentManagerSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
     {
+        m_menuLoadChannel.LoadAssetAsync<LoadEventChannelSO>().Completed += LoadMainGameScene;
+    }
+
+    private void LoadMainGameScene(AsyncOperationHandle<LoadEventChannelSO> obj)
+    {
+        obj.Result.RaiseEvent(_MainGameSceneToLoad, true);
         SceneManager.UnloadSceneAsync(0);
     }
+    
+    
 
 
 

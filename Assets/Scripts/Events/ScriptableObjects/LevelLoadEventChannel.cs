@@ -6,11 +6,11 @@ using UnityEngine.Events;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/Load Level Event Channel")]
-    public class LevelLoadEventChannel : DescriptionBaseSO
+    public class LevelLoadEventChannel : ScriptableObject
     {
-        public UnityAction<LevelSceneSO, bool, bool> OnLoadingRequested;
+        public UnityAction<LevelSO, bool, bool> OnLoadingRequested;
 
-        public void RaiseEvent(LevelSceneSO LevelToLoad, bool showLoadingScreen = false, bool fadeScreen = false)
+        public void RaiseEvent(LevelSO LevelToLoad, bool showLoadingScreen = false, bool fadeScreen = false)
         {
             if (OnLoadingRequested != null)
             {

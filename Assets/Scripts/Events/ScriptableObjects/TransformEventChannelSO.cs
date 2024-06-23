@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace Events.ScriptableObjects
 {
     [CreateAssetMenu(menuName = "Events/Transform Event Channel")]
-    public class TransformEventChannelSO : DescriptionBaseSO
+    public class TransformEventChannelSO : ScriptableObject
     {
         public UnityAction<Transform> OnEventRaised;
 

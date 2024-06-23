@@ -4,12 +4,12 @@ using UnityEngine;
 namespace Levels.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "Level Button Factory", menuName = "Factory/Level Button Factor", order = 0)]
-    public class LevelButtonFactory : FactorySO<LevelButtonView>
+    public class LevelButtonFactory : FactorySO<LevelButton>
     {
         [SerializeField] 
-        private LevelButtonView Prefab;
+        private LevelButton Prefab;
         
-        public override LevelButtonView Create()
+        public override LevelButton Create()
         {
             return Instantiate(Prefab);
         }
