@@ -1,18 +1,24 @@
 
 
+using System.Collections.Generic;
 using Audio.AudioData;
 using BaseClasses;
+using SceneManagment.ScriptableObjects.Actions;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace SceneManagment.ScriptableObjects
 {
-    public class GameSceneSO : DescriptionBaseSO
+    [CreateAssetMenu(menuName = "Scene/Game Scene")]
+    public class GameSceneSO : ScriptableObject
     {
-
         public GameSceneType SceneType;
         public AssetReference SceneReference;
-        public AudioCueSO musicTrack;
-        
+
+        [Header("Actions To Perform On Entering")] [SerializeField]
+        public List<BaseSceneChangeAction> OnEnterSceneActions = new List<BaseSceneChangeAction>();
+        [Header("Actions to Perform On Leaving")]
+        [SerializeField]  public List<BaseSceneChangeAction> OnLeaveSceneActions = new List<BaseSceneChangeAction>();
         
         public enum GameSceneType
         {
@@ -20,11 +26,10 @@ namespace SceneManagment.ScriptableObjects
             Initialisation,
             PersistentManagers,
             Gameplay,
-            MainMenu,
             
             //Status Scenes
-            FailedLevelScene,
-            WinLevelScene,
+            Level,
+            Menu
             
         }
     }
