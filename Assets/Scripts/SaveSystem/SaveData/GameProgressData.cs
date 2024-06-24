@@ -5,19 +5,16 @@ using SaveSystem.Interface;
 
 namespace SaveSystem.SaveData
 {
-    public class GameProgressData : IDataSave
+    public class GameProgressData: GameData, IDataSave
     {
         private List<GameLevelData> m_Levels;
         public int LastLevelSelectedIndex { get; set; }
 
-        public GameProgressData(string filePath, string fileName)
+        public GameProgressData()
         {
             m_Levels = new List<GameLevelData>();
-            FileName = fileName;
-            FilePath = filePath;
+            LastLevelSelectedIndex = 0;
         }
-        public string FileName { get; }
-        public string FilePath { get; }
         
         public void WriteDataToFile(BinaryWriter writer)
         {

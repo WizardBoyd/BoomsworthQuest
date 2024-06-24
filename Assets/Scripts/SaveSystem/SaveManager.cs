@@ -39,58 +39,12 @@ namespace SaveSystem
             }
             return false;
         }
+        
+        
 
-        public void SaveAll()
+        public void Save(string filename, IDataSave save)
         {
-            foreach (IDataSave dataSave in m_dataSaves)
-            {
-                Save(Path.Combine(dataSave.FilePath,dataSave.FileName));
-            }
-        }
-
-        public void LoadAll()
-        {
-            foreach (IDataSave dataSave in m_dataSaves)
-            {
-                Load(Path.Combine(dataSave.FilePath,dataSave.FileName));
-            }
-        }
-
-        public void Save(params string[] fileNames)
-        {
-            foreach (string fileName in fileNames)
-            {
-                Save(fileName);
-            }
-        }
-
-        public void Save(string fileName)
-        {
-            if (m_dataSaves.Any(x => x.FileName == fileName))
-            {
-                IDataSave save = m_dataSaves.First(x => x.FileName == fileName);
-                Save(save);
-            }
-        }
-
-        public void Load(params string[] fileNames)
-        {
-            foreach (string fileName in fileNames)
-            {
-                Load(fileName);
-            }
-        }
-        public void Load(string fileName)
-        {
-            if (m_dataSaves.Any(x => x.FileName == fileName))
-            {
-                IDataSave save = m_dataSaves.First(x => x.FileName == fileName);
-                Load(save);
-            }
-        }
-        private void Save(IDataSave save)
-        {
-            using (FileStream file = new FileStream(Path.Combine(Application.persistentDataPath, Path.Combine(save.FilePath, save.FileName)),
+            using (FileStream file = new FileStream(Path.Combine(Application.persistentDataPath, Path.Combine(filename)),
                        FileMode.OpenOrCreate))
             {
                 using (BinaryWriter binaryWriter = new BinaryWriter(file, Encoding.UTF8))
@@ -99,15 +53,15 @@ namespace SaveSystem
                 }
             }
         }
-        
-        private void Load(IDataSave save)
+
+        public void Load(string filename, IDataSave save)
         {
-            using (FileStream file = new FileStream(Path.Combine(Application.persistentDataPath, Path.Combine(save.FilePath, save.FileName)),
+            using (FileStream file = new FileStream(Path.Combine(Application.persistentDataPath, Path.Combine(filename)),
                        FileMode.Open))
             {
-                using (BinaryReader binaryRader = new BinaryReader(file, Encoding.UTF8))
+                using (BinaryReader binaryReader = new BinaryReader(file, Encoding.UTF8))
                 {
-                   save.ReadDataFromFile(binaryRader);
+                    save.ReadDataFromFile(binaryReader);
                 }
             }
         }

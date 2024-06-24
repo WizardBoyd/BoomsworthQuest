@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using SaveSystem;
+using SaveSystem.Interface;
+using SaveSystem.ScriptableObjects;
 using UnityEngine;
 
 namespace SceneManagment.ScriptableObjects.Actions
@@ -8,7 +10,7 @@ namespace SceneManagment.ScriptableObjects.Actions
     public class SaveFilesChangeAction : BaseSceneChangeAction
     {
         [SerializeField] 
-        private List<string> m_filenames = new List<string>();
+        private List<FileDescriptionSO> m_filenames = new List<FileDescriptionSO>();
         
         public override void PerformAction()
         {
@@ -16,7 +18,13 @@ namespace SceneManagment.ScriptableObjects.Actions
             SaveManager manager = SaveManager.Instance;
             if (manager != null)
             {
-                manager.Save(m_filenames.ToArray());
+                foreach (FileDescriptionSO descriptionSo in m_filenames)
+                {
+                    foreach (IDataSave dataSave in descriptionSo.GetSaveObject())
+                    {
+                        manager.Save(descriptionSo.FileName, dataSave);
+                    }
+                }
             }
         }
     }

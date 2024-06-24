@@ -3,10 +3,8 @@ using SaveSystem.Interface;
 
 namespace SaveSystem.SaveData
 {
-    public class PlayerSettingsData : IDataSave
+    public class PlayerSettingsData : GameData, IDataSave
     {
-        public string FileName { get => "PlayerSettings";}
-        public string FilePath { get => "Settings"; }
         public bool SoundOn { get; set; }
         public bool MusicOn { get; set; }
         public bool SFXOn { get; set; }

@@ -9,6 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a350c5855f59488094c05e65e149f680, type: 3}
-  m_Name: TestAction
+  m_Script: {fileID: 11500000, guid: a828e8b6140343e299569e5dab27b66d, type: 3}
+  m_Name: PlayerResourceFileDescription
   m_EditorClassIdentifier: 
+  FileName: Gameplay/Resource.data
