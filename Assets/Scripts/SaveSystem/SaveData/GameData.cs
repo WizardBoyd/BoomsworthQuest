@@ -1,4 +1,10 @@
+using System;
+
 namespace SaveSystem.SaveData
 {
-    public abstract class GameData { }
+    [Serializable]
+    public abstract class GameData
+    {
+        public string Name;
+    }
 }
