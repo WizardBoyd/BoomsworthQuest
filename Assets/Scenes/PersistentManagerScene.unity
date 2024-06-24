@@ -1097,7 +1097,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1783567591}
-  - component: {fileID: 1783567590}
+  - component: {fileID: 1783567592}
   m_Layer: 0
   m_Name: SaveSystem
   m_TagString: Untagged
@@ -1105,18 +1105,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1783567590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1783567589}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47c9e38c1df84f51ae81df9478589698, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1783567591
 Transform:
   m_ObjectHideFlags: 0
@@ -1132,6 +1120,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1783567592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783567589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3507e936f8e2452aac02e06c9921dbf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <PlayerSettingData>k__BackingField:
+    Name: 
+    <SoundOn>k__BackingField: 0
+    <MusicOn>k__BackingField: 0
+    <SFXOn>k__BackingField: 0
+  <GameProgressData>k__BackingField:
+    Name: 
+  <PlayerResourceData>k__BackingField:
+    Name: 
+  m_savePlayerSettingsChannel: {fileID: 11400000, guid: 808666751ee87b24989fc927fe630986, type: 2}
+  m_saveGameProgressChannel: {fileID: 11400000, guid: b468d2c3b5b2ae34fb37b9113ddae7ac, type: 2}
+  m_savePlayerResourcesChannel: {fileID: 11400000, guid: 43f71f6b7bc83684da05e87971ffcb9b, type: 2}
 --- !u!1 &1886919825
 GameObject:
   m_ObjectHideFlags: 0

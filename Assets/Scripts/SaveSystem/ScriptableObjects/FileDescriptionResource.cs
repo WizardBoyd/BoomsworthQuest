@@ -15,7 +15,7 @@ namespace SaveSystem.ScriptableObjects
             if (manager != null)
             {
                 PlayerResourceData resourceData = new PlayerResourceData();
-                manager.Save(FileName,resourceData);
+                //manager.Save(FileName,resourceData);
             }
         }
 
@@ -27,7 +27,7 @@ namespace SaveSystem.ScriptableObjects
                 ISaveInjectionReceiver<PlayerResourceData>[] saveables = FindObjectsOfType<MonoBehaviour>()
                     .OfType<ISaveInjectionReceiver<PlayerResourceData>>().ToArray();
                 PlayerResourceData resourceData = new PlayerResourceData();
-                manager.Load(FileName, resourceData);
+                //manager.Load(FileName, resourceData);
                 foreach (var saveable in saveables)
                 {
                     saveable.Receive(resourceData);
@@ -42,7 +42,7 @@ namespace SaveSystem.ScriptableObjects
                 .OfType<ISaveInjectionReceiver<PlayerResourceData>>().ToArray();
             foreach (ISaveInjectionReceiver<PlayerResourceData> saveInjectionReceiver in saveables)
             {
-                saveList.Add(saveInjectionReceiver.GetSave());
+                //saveList.Add(saveInjectionReceiver.GetSave());
             }
             return saveList.ToArray();
         }

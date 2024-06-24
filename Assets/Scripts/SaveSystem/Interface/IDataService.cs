@@ -10,5 +10,6 @@ namespace SaveSystem.Interface
         void Delete(string fileName);
         void DeleteAll();
         IEnumerable<string> ListSaves();
+        bool FileExists(string fileName);
     }
 }

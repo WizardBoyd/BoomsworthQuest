@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8276e3db41764724b40408ba7f7cc0b5, type: 3}
-  m_Name: Save Files Action
+  m_Script: {fileID: 11500000, guid: af0ccd09210d4f418bbeb4fbe10efca4, type: 3}
+  m_Name: FirstTimeSetup
   m_EditorClassIdentifier: 
-  m_filenames:
+  m_filesToCheck:
   - {fileID: 11400000, guid: c295416a22b3a0340a9663c296e68779, type: 2}
   - {fileID: 11400000, guid: b8c3e35693d464143ba06e46b89dbc18, type: 2}
   - {fileID: 11400000, guid: 17e7003e6fcc4bb41933dee3f6f65c7f, type: 2}

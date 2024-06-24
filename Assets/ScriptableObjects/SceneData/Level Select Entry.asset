@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26431830f2964013b5aed72657c640b6, type: 3}
   m_Name: Level Select Entry
   m_EditorClassIdentifier: 
+  SceneType: 3
   SceneReference:
     m_AssetGUID: fbef3508a7389b74b929f7b1913e72de
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  SceneType: 3
   OnEnterSceneActions:
   - {fileID: 11400000, guid: bb943c55996539644a3cc0bc9c49fb30, type: 2}
+  - {fileID: 11400000, guid: cd3f7ae6eb705274aa889973eae82498, type: 2}
   OnLeaveSceneActions: []

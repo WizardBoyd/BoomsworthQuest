@@ -10,6 +10,7 @@ using UnityEngine.Localization.Tables;
 namespace DependencyInjection
 {
     
+    [DefaultExecutionOrder(-1000)]
     public class Injector : MonoBehaviorSingleton<Injector>
     {
         private const BindingFlags m_bindingFlags =

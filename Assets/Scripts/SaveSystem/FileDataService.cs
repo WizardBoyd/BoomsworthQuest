@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Newtonsoft.Json;
 using SaveSystem.Interface;
 using SaveSystem.SaveData;
 using UnityEngine;
@@ -41,14 +42,15 @@ namespace SaveSystem
             {
                 TRW readWriter = new TRW();
                 TU newGameData = new TU();
-                readWriter.Read<TU>(m_serializer, newGameData, fileStream);
+                newGameData = readWriter.Read<TU>(m_serializer, newGameData, fileStream);
                 return newGameData;
             }
         }
 
         public void Delete(string fileName)
         {
-            throw new System.NotImplementedException();
+            string fileLocation = GetPathToFile(fileName);
+            File.Delete(fileLocation);
         }
 
         public void DeleteAll()
@@ -68,6 +70,17 @@ namespace SaveSystem
                     yield return Path.GetFileNameWithoutExtension(file);
                 }
             }
+        }
+
+        public bool FileExists(string fileName)
+        {
+            string fileLocation = GetPathToFile(fileName);
+            if (!File.Exists(fileLocation))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private string GetPathToFile(string fileName)
@@ -115,7 +128,7 @@ namespace SaveSystem
                     new FileDataService<U,URW>
                     {
                         m_fileExtension = this.m_fileExtension,
-                        m_dataPath = this.m_fileExtension,
+                        m_dataPath = this.m_datapath,
                         m_serializer = this.m_serializer
                     };
                 return newFileDataService;
@@ -126,7 +139,7 @@ namespace SaveSystem
     public interface IFileDataReadWriter<T>
     {
         void Write<TU>(ISerializer<T> serializer, TU data, FileStream stream) where TU : GameData;
-        void Read<TU>(ISerializer<T> serializer, TU data, FileStream stream) where TU : GameData;
+        TU Read<TU>(ISerializer<T> serializer, TU data, FileStream stream) where TU : GameData;
     }
     public class BinaryDataReadWriter : IFileDataReadWriter<byte[]>
     {
@@ -147,14 +160,37 @@ namespace SaveSystem
             }
         }
 
-        void IFileDataReadWriter<byte[]>.Read<TU>(ISerializer<byte[]> serializer, TU data, FileStream stream)
+        TU IFileDataReadWriter<byte[]>.Read<TU>(ISerializer<byte[]> serializer, TU data, FileStream stream)
         {
             using (BinaryReader reader = new BinaryReader(stream, serializer.EncodingOption))
             {
                 data = serializer.Deserialize<TU>(ReadAllBytesFromStream(stream));
             }
+
+            return data;
         }
         
+    }
+
+    public class JsonDataReadWriter : IFileDataReadWriter<string>
+    {
+        public void Write<TU>(ISerializer<string> serializer, TU data, FileStream stream) where TU : GameData
+        {
+            using (StreamWriter streamWriter = new StreamWriter(stream))
+            {
+                streamWriter.Write(serializer.Serialize(data));
+            }
+        }
+
+        public TU Read<TU>(ISerializer<string> serializer, TU data, FileStream stream) where TU : GameData
+        {
+            using (StreamReader streamReader = new StreamReader(stream))
+            {
+                string serializedData = streamReader.ReadToEnd();
+                data = serializer.Deserialize<TU>(serializedData);
+            }
+            return data;
+        }
     }
     
 }

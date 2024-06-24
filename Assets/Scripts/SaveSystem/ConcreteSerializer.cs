@@ -53,15 +53,12 @@ namespace SaveSystem
         private bool m_prettyPrint;
         public Encoding EncodingOption { get => m_EncodingOption; }
         private Encoding m_EncodingOption = null;
+        
 
-        public JsonSerializer(Encoding encodingOption = null)
-        {
-            this.m_EncodingOption = encodingOption ?? new UTF8Encoding();
-        }
-
-        public JsonSerializer(bool prettyPrint = false)
+        public JsonSerializer(Encoding encodingOption = null ,bool prettyPrint = false)
         {
             m_prettyPrint = prettyPrint;
+            this.m_EncodingOption = encodingOption ?? new UTF8Encoding();
         }
         
         public string Serialize<TU>(TU obj)

@@ -15,7 +15,7 @@ namespace SaveSystem.ScriptableObjects
             if (manager != null)
             {
                 GameProgressData progressData = new GameProgressData();
-                manager.Save(FileName,progressData);
+                //manager.Save(FileName,progressData);
             }
         }
 
@@ -27,7 +27,7 @@ namespace SaveSystem.ScriptableObjects
                 ISaveInjectionReceiver<GameProgressData>[] saveables = FindObjectsOfType<MonoBehaviour>()
                     .OfType<ISaveInjectionReceiver<GameProgressData>>().ToArray();
                 GameProgressData progressData = new GameProgressData();
-                manager.Load(FileName, progressData);
+                //manager.Load(FileName, progressData);
                 foreach (var saveable in saveables)
                 {
                     saveable.Receive(progressData);
@@ -42,7 +42,7 @@ namespace SaveSystem.ScriptableObjects
                 .OfType<ISaveInjectionReceiver<GameProgressData>>().ToArray();
             foreach (ISaveInjectionReceiver<GameProgressData> saveInjectionReceiver in saveables)
             {
-                saveList.Add(saveInjectionReceiver.GetSave());
+                //saveList.Add(saveInjectionReceiver.GetSave());
             }
             return saveList.ToArray();
         }
