@@ -2,9 +2,9 @@ using System;
 using System.Text;
 using Events.ScriptableObjects;
 using Misc.Singelton;
-using SaveSystem.Interface;
 using SaveSystem.SaveData;
 using UnityEngine;
+using WizardSave;
 
 namespace SaveSystem
 {

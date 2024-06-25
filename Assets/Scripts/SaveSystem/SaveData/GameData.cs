@@ -2,15 +2,11 @@ using System;
 using System.Collections.Generic;
 using Levels.Enums;
 using UnityEngine;
+using WizardSave;
 
 namespace SaveSystem.SaveData
 {
-    [Serializable]
-    public abstract class GameData
-    {
-        public string Name;
-    }
-
+    
     [Serializable]
     public class PlayerSettingsData : GameData
     {

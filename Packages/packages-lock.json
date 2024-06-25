@@ -473,6 +473,19 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.wizboyd.wizardsave": {
+      "version": "file:D:/UnityPackages/WizardSave",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "com.wizboyd.wizardui": {
+      "version": "https://github.com/WizardBoyd/WizardUI.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d19a28c7779f1980e2aa9082420112c82a869c47"
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,
