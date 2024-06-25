@@ -19,7 +19,7 @@ namespace UI
         /// <param name="screen">The SceneController to Show</param>
         /// <param name="properties">The data payload</param>
         /// <typeparam name="TProps">the type of the data payload</typeparam>
-        public abstract void ShowScreen<TProps>(TScreen screen, TProps properties);
+        public abstract void ShowScreen<TProps>(TScreen screen, TProps properties) where TProps : IScreenProperties;
 
         /// <summary>
         /// Hides a screen
@@ -92,7 +92,7 @@ namespace UI
         /// </summary>
         /// <param name="screenID">The desired screen ID (by default its the name of the prefab)</param>
         /// <param name="properties">The data payload for this screen to use</param>
-        public void ShowScreenById<TProps>(string screenID, TProps properties)
+        public void ShowScreenById<TProps>(string screenID, TProps properties) where TProps : IScreenProperties
         {
             TScreen ct1;
             if (m_registeredScreens.TryGetValue(screenID, out ct1))
