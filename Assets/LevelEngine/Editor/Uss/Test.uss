@@ -1,0 +1,11 @@
+.header {
+    color: rgb(0, 1, 255);
+    background-color: rgb(255, 0, 0);
+}
+
+.toggle {
+}
+
+.toggle:checked {
+    opacity: 0.5;
+}

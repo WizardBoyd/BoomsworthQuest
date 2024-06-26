@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/LevelEngine/Editor/Uss/Test.uss?fileID=7433441132597879392&amp;guid=a861899d421a01844a49da56b605e778&amp;type=3#Test" />
+    <ui:VisualElement name="ProgressContainer" style="flex-grow: 1;">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ProgressHeader" class="header" />
+        <ui:ProgressBar value="22" title="my-progress" />
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1;">
+        <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" class="header" />
+        <ui:Button text="Button" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+    </ui:VisualElement>
+    <ui:Toggle label="Toggle" class="toggle" />
+</ui:UXML>
