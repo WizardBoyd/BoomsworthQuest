@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977b1745d818a6143b252a51243295a7, type: 3}
+  m_Name: LevelSelectionUISettings
+  m_EditorClassIdentifier: 
+  m_templateUIPrefab: {fileID: 5077393927077237169, guid: b9690fc53a711a64185a7c94d6fd7bd9, type: 3}
+  m_screenToRegister:
+  - {fileID: 106198240844260049, guid: ccde261682ee7c04296eb0e1630dec33, type: 3}
+  - {fileID: 106198240844260049, guid: 9415b48cdf9ec274ca48b223e5fec12a, type: 3}
+  - {fileID: 106198240844260049, guid: 956375446b0a1a947a2d9b6b590ff724, type: 3}
+  - {fileID: 106198240844260049, guid: 0e8695bdb637d4d4091e85db3f0bcf4c, type: 3}
+  - {fileID: 8141466317073145480, guid: 17eb6db99ff8eb549ac89fe262f5965d, type: 3}
+  - {fileID: 8141466317073145480, guid: 085a4709b13678840ba7741ab5147d55, type: 3}
+  m_deactivateScreenGos: 1

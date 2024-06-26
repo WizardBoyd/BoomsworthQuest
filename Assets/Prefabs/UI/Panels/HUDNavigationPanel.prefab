@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4233560808574758858}
   - component: {fileID: 5294730815878158283}
+  - component: {fileID: 6507397250950208723}
   m_Layer: 5
-  m_Name: SideNavigationBarPanel
+  m_Name: HUDNavigationPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +46,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 106198240844260049}
   m_CullTransparentMesh: 1
+--- !u!114 &6507397250950208723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106198240844260049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8753bb04ab4d53ab27d00501cae32c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_animIn: {fileID: 0}
+  m_animOut: {fileID: 0}
 --- !u!1 &773495605707271848
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,7 +71,7 @@ GameObject:
   - component: {fileID: 53522685725007834}
   - component: {fileID: 3771697639290146697}
   - component: {fileID: 8640977480877376660}
-  - component: {fileID: 2422150453735885692}
+  - component: {fileID: 423565161565693555}
   m_Layer: 5
   m_Name: TreasureButton
   m_TagString: Untagged
@@ -122,7 +137,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2422150453735885692
+--- !u!114 &423565161565693555
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -131,7 +146,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 773495605707271848}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: de79f5ec9bc846379a550991b2489bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -166,6 +181,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  m_OnClickEvent: {fileID: 0}
 --- !u!1 &3002271317660235294
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +268,7 @@ GameObject:
   - component: {fileID: 9110742039299160645}
   - component: {fileID: 3757981434335603233}
   - component: {fileID: 3613484275612524062}
-  - component: {fileID: 3869374561589306396}
+  - component: {fileID: 635659251711227016}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -318,7 +334,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3869374561589306396
+--- !u!114 &635659251711227016
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -327,7 +343,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4988761375069115154}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: de79f5ec9bc846379a550991b2489bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -362,6 +378,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  m_OnClickEvent: {fileID: 11400000, guid: c3cac8b2065381547a02e831df033235, type: 2}
 --- !u!1 &5347584837273441227
 GameObject:
   m_ObjectHideFlags: 0

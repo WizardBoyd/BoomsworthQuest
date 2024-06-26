@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13e7811bd3a08074095845c6f6aae273, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_darkenBackgroundObject: {fileID: 0}
+  m_darkenBackgroundObject: {fileID: 1979432672557540509}
 --- !u!1 &6085302899007543996
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +229,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -2180, y: -980}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1831524865569238884
 MonoBehaviour:
@@ -244,7 +244,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_priortyLayers:
-    m_paraLayers: []
+    m_paraLayers:
+    - m_priority: 0
+      m_targetParent: {fileID: 8876488238048974736}
+    - m_priority: 1
+      m_targetParent: {fileID: 3756600283707699388}
+    - m_priority: 2
+      m_targetParent: {fileID: 7238427165897947897}
 --- !u!1 &6592196441001179419
 GameObject:
   m_ObjectHideFlags: 0
@@ -293,7 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9816056377c98c14e83d0d7012a7374f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_priorityParaLayer: {fileID: 0}
+  m_priorityParaLayer: {fileID: 2115991995001272514}
 --- !u!1 &6989725851145239112
 GameObject:
   m_ObjectHideFlags: 0

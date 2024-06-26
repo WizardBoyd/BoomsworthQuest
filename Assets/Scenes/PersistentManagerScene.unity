@@ -588,6 +588,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1001936104}
   - component: {fileID: 1001936105}
+  - component: {fileID: 1001936106}
   m_Layer: 0
   m_Name: Injector
   m_TagString: Untagged
@@ -620,6 +621,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c14ee77a4fb431bbb43fb4c4656f643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1001936106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001936103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58300c9d3adb489abf23599f402b460d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1350937178

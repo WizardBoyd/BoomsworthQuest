@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using DependencyInjection;
 using Events.ScriptableObjects;
 using Misc.Singelton;
 using SaveSystem.SaveData;
@@ -87,5 +88,6 @@ namespace SaveSystem
             m_dataService.Save(PlayerResourceData);
             m_dataService.Save(GameProgressData);
         }
+        
     }
 }
