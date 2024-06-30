@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Levels.ScriptableObjects
 {
@@ -8,8 +9,6 @@ namespace Levels.ScriptableObjects
     {
         [SerializeField] 
         private List<LevelSO> m_levelsInZone = new List<LevelSO>();
-
-        
         
         public IEnumerable<LevelSO> GetLevelsInZone() => m_levelsInZone;
         

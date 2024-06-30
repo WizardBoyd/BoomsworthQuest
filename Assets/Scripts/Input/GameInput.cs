@@ -30,35 +30,47 @@ namespace Input
             ""id"": ""404ad226-e74c-4f35-9d18-5d533168754b"",
             ""actions"": [
                 {
-                    ""name"": ""TouchButton"",
+                    ""name"": ""TapAction"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""1d3827f5-39e0-453f-a10f-c456e829227a"",
-                    ""expectedControlType"": ""Button"",
+                    ""id"": ""9e1b375f-7d10-44ae-9bf8-f8b89e797d21"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""43ed5bbe-765a-4e48-a859-bf928afee906"",
-                    ""path"": """",
+                    ""id"": ""e07af80e-93b3-4338-a4f7-ce4d430fe137"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TouchButton"",
+                    ""groups"": ""TouchScreen"",
+                    ""action"": ""TapAction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
             ]
         }
     ],
-    ""controlSchemes"": []
+    ""controlSchemes"": [
+        {
+            ""name"": ""TouchScreen"",
+            ""bindingGroup"": ""TouchScreen"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Touchscreen>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                }
+            ]
+        }
+    ]
 }");
             // GenericActions
             m_GenericActions = asset.FindActionMap("GenericActions", throwIfNotFound: true);
-            m_GenericActions_TouchButton = m_GenericActions.FindAction("TouchButton", throwIfNotFound: true);
+            m_GenericActions_TapAction = m_GenericActions.FindAction("TapAction", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -120,12 +132,12 @@ namespace Input
         // GenericActions
         private readonly InputActionMap m_GenericActions;
         private List<IGenericActionsActions> m_GenericActionsActionsCallbackInterfaces = new List<IGenericActionsActions>();
-        private readonly InputAction m_GenericActions_TouchButton;
+        private readonly InputAction m_GenericActions_TapAction;
         public struct GenericActionsActions
         {
             private @GameInput m_Wrapper;
             public GenericActionsActions(@GameInput wrapper) { m_Wrapper = wrapper; }
-            public InputAction @TouchButton => m_Wrapper.m_GenericActions_TouchButton;
+            public InputAction @TapAction => m_Wrapper.m_GenericActions_TapAction;
             public InputActionMap Get() { return m_Wrapper.m_GenericActions; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -135,16 +147,16 @@ namespace Input
             {
                 if (instance == null || m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Add(instance);
-                @TouchButton.started += instance.OnTouchButton;
-                @TouchButton.performed += instance.OnTouchButton;
-                @TouchButton.canceled += instance.OnTouchButton;
+                @TapAction.started += instance.OnTapAction;
+                @TapAction.performed += instance.OnTapAction;
+                @TapAction.canceled += instance.OnTapAction;
             }
 
             private void UnregisterCallbacks(IGenericActionsActions instance)
             {
-                @TouchButton.started -= instance.OnTouchButton;
-                @TouchButton.performed -= instance.OnTouchButton;
-                @TouchButton.canceled -= instance.OnTouchButton;
+                @TapAction.started -= instance.OnTapAction;
+                @TapAction.performed -= instance.OnTapAction;
+                @TapAction.canceled -= instance.OnTapAction;
             }
 
             public void RemoveCallbacks(IGenericActionsActions instance)
@@ -162,9 +174,18 @@ namespace Input
             }
         }
         public GenericActionsActions @GenericActions => new GenericActionsActions(this);
+        private int m_TouchScreenSchemeIndex = -1;
+        public InputControlScheme TouchScreenScheme
+        {
+            get
+            {
+                if (m_TouchScreenSchemeIndex == -1) m_TouchScreenSchemeIndex = asset.FindControlSchemeIndex("TouchScreen");
+                return asset.controlSchemes[m_TouchScreenSchemeIndex];
+            }
+        }
         public interface IGenericActionsActions
         {
-            void OnTouchButton(InputAction.CallbackContext context);
+            void OnTapAction(InputAction.CallbackContext context);
         }
     }
 }
