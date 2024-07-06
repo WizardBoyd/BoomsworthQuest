@@ -23,8 +23,6 @@ namespace Tests.Gameplay
         [Header("Listening To")] 
         [SerializeField]
         private VoidEventChannelSO FuseLitChannel = default;
-        [SerializeField] 
-        private VoidEventChannelSO OnSceneReadyChannel = default;
 
         private void Awake()
         {
@@ -34,44 +32,28 @@ namespace Tests.Gameplay
         private void OnEnable()
         {
             FuseLitChannel.OnEventRaised += Fire;
-            OnSceneReadyChannel.OnEventRaised += OnSceneReady;
+
         }
 
         private void OnDisable()
         {
             FuseLitChannel.OnEventRaised -= Fire;
-            OnSceneReadyChannel.OnEventRaised -= OnSceneReady;
-            // PhysicsSimulationManager.Instance.RemoveActionToPerformEachStep(UpdateCanonSimulation);
-            // PhysicsSimulationManager.Instance.On_PhysicStepPerformed -= UpdateTrajectoryPath;
         }
-
-        private void OnSceneReady()
-        {
-            // PhysicsSimulationManager.Instance.AddActionToPerformEachStep(UpdateCanonSimulation);
-            // PhysicsSimulationManager.Instance.On_PhysicStepPerformed += UpdateTrajectoryPath;
-        }
-
-
+        
         private void Update()
         {
             if (CanonRotationHandler.IsDragging)
             {
-                PhysicsSimulationManager.Instance.SimulateTrajectory(
-                    CanonBallChamber.transform.position,
-                    CanonBallChamber.right * 10,
-                    m_lineRenderer);
+                TrajectorySimulationRequestNoObject request = new TrajectorySimulationRequestNoObject();
+                request.Type = Collider2DType.Circle;
+                request.OriginPoint = CanonBallChamber.transform.position;
+                request.Renderer = m_lineRenderer;
+                request.SimulationSteps = 100;
+                request.Force = CanonBallChamber.right * 100;
+                PhysicsSimulationManager.Instance.SimulateTrajectory(request);
             }
         }
-
-        private void UpdateTrajectoryPath(int step)
-        {
-            if (m_currentGhostCanon != null)
-            {
-                // m_lineRenderer.positionCount = PhysicsSimulationManager.Instance.SimulationStepsPerFrame;
-                // m_lineRenderer.SetPosition(step, m_currentGhostCanon.transform.position);
-            }
-        }
-
+        
         public void Fire()
         {
             Animator.SetTrigger("Fire");

@@ -4,6 +4,7 @@ using System.Linq;
 using Events.ScriptableObjects;
 using Misc.ExtensionMethods;
 using Misc.Singelton;
+using Pool;
 using SceneManagment;
 using Unity.Collections;
 using UnityEngine;
@@ -15,30 +16,59 @@ using Object = UnityEngine.Object;
 namespace Tests.Gameplay
 {
 
-    public class PhysicsPool
+    public enum Collider2DType
     {
-        private List<GameObject> m_pooledGameObjects;
-        private List<GameObject> m_lentObject;
+        Box,
+        Circle,
+        Capsule
+    }
+    
+    public abstract class TrajectorySimulationRequest
+    {
+        public Vector2 OriginPoint;
+        public Vector2 Force;
+        public int SimulationSteps;
+        public LineRenderer Renderer;
+    }
+
+    public class TrajectorySimulationRequestNoObject : TrajectorySimulationRequest
+    {
+        public Collider2DType Type;
+    }
+
+    public class TrajectorySimulationRequestObject : TrajectorySimulationRequest
+    {
+        public GameObject cloneObject;
+    }
+
+    public class PhysicsObject
+    {
+        public PhysicsObject(Transform transform, Rigidbody2D rb, Collider2D collider)
+        {
+            this.PhysicObjectTransform = transform;
+            this.Rigidbody2D = rb;
+            this.Collider2D = collider;
+        }
+        
+        public Transform PhysicObjectTransform;
+        public Rigidbody2D Rigidbody2D;
+        public Collider2D Collider2D;
+    }
+    
+    public class PhysicsPool : IPool<PhysicsObject>
+    {
+        private Stack<PhysicsObject> m_pooledObjects;
         private bool bIsPrewarmed = false;
         private Scene m_physicsScene;
         private Transform m_RootPoolTransform;
 
         public PhysicsPool(Scene physicsScene)
         {
-            m_pooledGameObjects = ListPool<GameObject>.Get();
-            m_lentObject = ListPool<GameObject>.Get();
+            m_pooledObjects = new Stack<PhysicsObject>();
             m_physicsScene = physicsScene;
-            Prewarm(10);
-        }
-        ~PhysicsPool()
-        {
-            //Should not need to clear as when the physics scene unloads all the game
-            //Objects should go with it
-            ListPool<GameObject>.Release(m_pooledGameObjects);
-            ListPool<GameObject>.Release(m_lentObject);
         }
         
-        private void Prewarm(int num)
+        public void Prewarm(int num)
         {
             if(bIsPrewarmed)
                 return;
@@ -51,249 +81,110 @@ namespace Tests.Gameplay
 
             for (int i = 0; i < num; i++)
             {
-                GameObject newObj = Create();
-                newObj.SetActive(false);
-                m_pooledGameObjects.Add(newObj);
+                PhysicsObject newObj = Create(Collider2DType.Circle);
+                m_pooledObjects.Push(newObj);
             }
             bIsPrewarmed = true;
         }
 
-        public GameObject Request(PhysicSimulationRequestDetails details)
+        public PhysicsObject Request()
         {
-            bool NewlyCreate = false;
-            GameObject requestObject = null;
-            if(!bIsPrewarmed)
-                Prewarm(5);
-            if (!DoesAnyPooledObjectHaveRequirements(details))
+            PhysicsObject requestedObject = null;
+            if (m_pooledObjects.Count > 0)
             {
-                requestObject = Create(details);
-                NewlyCreate = true;
+                requestedObject = m_pooledObjects.Pop();
+                requestedObject.PhysicObjectTransform.gameObject.SetActive(true);
+                requestedObject.PhysicObjectTransform.SetParent(null);
             }
             else
             {
-                requestObject = GetPooledObjectWithRequirements(details);
+                requestedObject = Create(Collider2DType.Circle);
+                requestedObject.PhysicObjectTransform.SetParent(null);
             }
-
-            if (!NewlyCreate)
-            {
-                m_pooledGameObjects.Remove(requestObject);
-            }
-            m_lentObject.Add(requestObject);
-            
-            requestObject.SetActive(true);
-            requestObject.transform.SetParent(null);
-            
-            return requestObject;
+            return requestedObject;
         }
 
-        public void Return(IEnumerable<GameObject> members)
+        public PhysicsObject Request(Collider2DType type)
         {
-            foreach (GameObject member in members)
+            PhysicsObject requestedObject = null;
+            if (m_pooledObjects.Count > 0)
             {
-                Return(member);
+                requestedObject = m_pooledObjects.FirstOrDefault(x =>
+                {
+                    Type colliderType = x.Collider2D.GetType();
+                    switch (type)
+                    {
+                        case Collider2DType.Box:
+                            if (colliderType == typeof(BoxCollider2D))
+                                return true;
+                            break;
+                        case Collider2DType.Circle:
+                            if (colliderType == typeof(CircleCollider2D))
+                                return true;
+                            break;
+                        case Collider2DType.Capsule:
+                            if (colliderType == typeof(CapsuleCollider2D))
+                                return true;
+                            break;
+                    }
+                    return false;
+                });
+                if (requestedObject == null)
+                {
+                    requestedObject = Create(type);
+                }
+                requestedObject.PhysicObjectTransform.gameObject.SetActive(true);
+                requestedObject.PhysicObjectTransform.SetParent(null);
             }
+            else
+            {
+                requestedObject = Create(type);
+                requestedObject.PhysicObjectTransform.SetParent(null);
+            }
+            return requestedObject;
         }
+
+        public void Return(PhysicsObject member)
+        {
+            member.PhysicObjectTransform.gameObject.SetActive(false);
+            member.PhysicObjectTransform.SetParent(m_RootPoolTransform);
+            member.PhysicObjectTransform.position = Vector3.zero;
+        }
+
         
-        public void Return(GameObject member)
-        {
-            if (!m_lentObject.Contains(member))
-            {
-                Debug.LogWarning("Can't Return object to pool because it does not belong Try Destroying it instead");
-                return;
-            }
-            if (!bIsPrewarmed)
-                bIsPrewarmed = true;
-            if (member.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
-            {
-                rb.bodyType = RigidbodyType2D.Kinematic;
-            }
-            member.transform.SetParent(m_RootPoolTransform);
-            member.SetActive(false);
-            m_lentObject.Remove(member);
-            m_pooledGameObjects.Add(member);
-        }
-
-        private GameObject Create(PhysicSimulationRequestDetails details)
-        {
-            GameObject newObj = Create();
-            newObj.AddComponent(details.Collider2DType);
-            if (details.NeedRigidBody)
-            {
-                Rigidbody2D rb =  newObj.AddComponent<Rigidbody2D>();
-                rb.bodyType = RigidbodyType2D.Kinematic;
-            }
-            return newObj;
-        }
-
-        private GameObject Create()
+        
+        private PhysicsObject Create(Collider2DType type)
         {
             GameObject newObj = new GameObject(string.Concat("PhysicsObj_", 
-                m_pooledGameObjects.Count.ToString()));
+                m_pooledObjects.Count.ToString()));
+            Rigidbody2D rb = newObj.AddComponent<Rigidbody2D>();
+            Collider2D collider2D = null;
+            switch (type)
+            {
+                case Collider2DType.Box:
+                    collider2D = newObj.AddComponent<BoxCollider2D>();
+                    break;
+                case Collider2DType.Circle:
+                    collider2D = newObj.AddComponent<CircleCollider2D>();
+                    break;
+                case Collider2DType.Capsule:
+                    collider2D = newObj.AddComponent<CapsuleCollider2D>();
+                    break;
+            }
             SceneManager.MoveGameObjectToScene(newObj, m_physicsScene);
             newObj.transform.SetParent(m_RootPoolTransform);
-            
-            return newObj;
+            newObj.SetActive(false);
+            return new PhysicsObject(newObj.transform, rb, collider2D);
         }
 
-        private GameObject GetPooledObjectWithRequirements(PhysicSimulationRequestDetails details)
-        {
-            if (details.NeedRigidBody)
-            {
-                return m_pooledGameObjects.First(x =>
-                {
-                    if (x.TryGetComponent<Rigidbody2D>(out _) && x.TryGetComponent(details.Collider2DType, out _))
-                        return true;
-                    return false;
-                });
-            }
-            else
-            {
-                return m_pooledGameObjects.First(x => x.TryGetComponent(details.Collider2DType, out _));
-            }
-        }
-        private bool DoesAnyPooledObjectHaveRequirements(PhysicSimulationRequestDetails details)
-        {
-            if (details.NeedRigidBody)
-            {
-                return m_pooledGameObjects.Any(x =>
-                {
-                    if (x.TryGetComponent<Rigidbody2D>(out _) && x.TryGetComponent(details.Collider2DType, out _))
-                        return true;
-                    return false;
-                });
-            }
-            else
-            {
-                return m_pooledGameObjects.Any(x => x.TryGetComponent(details.Collider2DType, out _));
-            }
-        }
-    }
-    
-    public struct PhysicSimulationRequestDetails
-    {
-        public Type Collider2DType;
-        public bool NeedRigidBody;
-    }
-    
-    public class PhysicsSimulationScene2D
-    {
-        public Scene SimulationScene { get; private set; }
-        public PhysicsScene2D PhysicsScene2D { get; private set; }
-        
-        private Dictionary<GameObject, GameObject> m_registeredPhysicsObjects;
-        private HashSet<int> m_CurrentFrameInstanceIds;
-        
-        public PhysicsSimulationScene2D(string sceneName)
-        {
-            m_registeredPhysicsObjects = new Dictionary<GameObject, GameObject>();
-            SimulationScene =
-                SceneManager.CreateScene(sceneName, new CreateSceneParameters(LocalPhysicsMode.Physics2D));
-            PhysicsScene2D = SimulationScene.GetPhysicsScene2D();
-            m_CurrentFrameInstanceIds = new HashSet<int>();
-        }
-
-        ~PhysicsSimulationScene2D()
-        {
-            SceneLoader.Instance.UnloadPhysicsScene(SimulationScene);
-        }
-
-        //public GameObject RequestPhysicsBodyForRequest(PhysicSimulationRequestDetails requestDetails) => PhysicsPool.Request(requestDetails);
-
-        private bool GetCorrelatingObject(GameObject outOfSceneGameObject, out GameObject inPhysicsSceneObj)
-        {
-            inPhysicsSceneObj = null;
-            if (m_registeredPhysicsObjects.ContainsKey(outOfSceneGameObject))
-            {
-                inPhysicsSceneObj = m_registeredPhysicsObjects[outOfSceneGameObject];
-                return true;
-            }
-            return false;
-        }
-
-        private bool GetPhysicsBody(GameObject inPhysicsSceneObj, out Rigidbody2D rb)
-        {
-            rb = inPhysicsSceneObj.GetComponent<Rigidbody2D>();
-            if (rb != null)
-                return true;
-            return false;
-        }
-
-        public void AddObjects(IEnumerable<GameObject> outOfSceneGameObjects) => outOfSceneGameObjects.ForEach(AddObject);
-        public void AddObject(GameObject outOfSceneGameObject)
-        {
-            if (!m_registeredPhysicsObjects.ContainsKey(outOfSceneGameObject))
-            {
-                GameObject ghostObject = null;
-                CreatePhysicsSimulationObject(outOfSceneGameObject, out ghostObject);
-                if(ghostObject != null)
-                    m_registeredPhysicsObjects.Add(outOfSceneGameObject, ghostObject);
-            }
-        }
-
-        public void DestroyObjects(GameObject[] outOfSceneGameObjects) => outOfSceneGameObjects.ForEach(DestroyObject);
-        public void DestroyObject(GameObject outOfSceneGameObject)
-        {
-            if (m_registeredPhysicsObjects.ContainsKey(outOfSceneGameObject))
-            {
-                GameObject toDestroy = m_registeredPhysicsObjects[outOfSceneGameObject];
-                m_registeredPhysicsObjects.Remove(outOfSceneGameObject);
-               Object.Destroy(toDestroy);
-            }
-        }
-
-        public void SimulatePhysicsObject()
-        {
-            foreach (var (outOfSceneObj, inPhysicsSceneObj) in m_registeredPhysicsObjects)
-            {
-                inPhysicsSceneObj.transform.position = outOfSceneObj.transform.position;
-                inPhysicsSceneObj.transform.rotation = outOfSceneObj.transform.rotation;
-                inPhysicsSceneObj.transform.localScale = outOfSceneObj.transform.localScale;
-            }
-
-            PhysicsScene2D.Simulate(Time.fixedDeltaTime);
-        }
-
-        public void MoveAllPendingObjectToScene()
-        {
-            if (m_CurrentFrameInstanceIds.Count > 0)
-            {
-                NativeArray<int> instanceIds =
-                    new NativeArray<int>(m_CurrentFrameInstanceIds.ToArray(), Allocator.Temp);
-                SceneManager.MoveGameObjectsToScene(instanceIds, SimulationScene);
-                m_CurrentFrameInstanceIds.Clear();
-            }
-        }
-
-        private void CreatePhysicsSimulationObject(GameObject outOfSceneGameObject, out GameObject inPhysicsGameObject)
-        {
-            inPhysicsGameObject = Object.Instantiate(outOfSceneGameObject, outOfSceneGameObject.transform.position,
-                outOfSceneGameObject.transform.rotation);
-            StripVisuals(inPhysicsGameObject);
-            m_CurrentFrameInstanceIds.Add(inPhysicsGameObject.GetInstanceID());
-        }
-
-        private void StripVisuals(GameObject ghostObj)
-        {
-            ghostObj.RemoveAllComponentsFromChildrenAndSelf(
-                typeof(Collider2D),
-                typeof(CircleCollider2D),
-                typeof(Rigidbody2D),
-                typeof(TilemapCollider2D),
-                typeof(Tilemap),
-                typeof(Grid));
-            //Move the ghostObjectLayer to ignore raycasts
-            ghostObj.AssignAllGameObjectAndChildrenToLayer(LayerMask.NameToLayer("Ignore Raycast"));
-        }
     }
     
     public class PhysicsSimulationManager : MonoBehaviorSingleton<PhysicsSimulationManager>
     {
-        private PhysicsSimulationScene2D m_PhysicsSimulationScene2D;
-        private PhysicsPool m_physicsPool;
+        private Scene m_simulationScene;
+        private PhysicsScene2D m_PhysicsScene;
 
-        [Header("Configurations")] 
-        [SerializeField]
-        private int m_simulationSteps = 10;
+        private PhysicsPool m_pool;
         
         [Header("Listening To")] [SerializeField]
         private VoidEventChannelSO on_SceneReady = default;
@@ -301,13 +192,16 @@ namespace Tests.Gameplay
         protected override void Awake()
         {
             base.Awake();
-            m_PhysicsSimulationScene2D = new PhysicsSimulationScene2D("SimulationScene");
-            m_physicsPool = new PhysicsPool(m_PhysicsSimulationScene2D.SimulationScene);
+            CreateSceneParameters createSceneParameters = new CreateSceneParameters(LocalPhysicsMode.Physics2D);
+            m_simulationScene = SceneManager.CreateScene("SimulationScene", createSceneParameters);
+            m_PhysicsScene = m_simulationScene.GetPhysicsScene2D();
+            m_pool = new PhysicsPool(m_simulationScene);
         }
 
         private void OnEnable()
         {
             on_SceneReady.OnEventRaised += OnGameSceneReady;
+            m_pool.Prewarm(10);
         }
 
         private void OnDisable()
@@ -319,7 +213,8 @@ namespace Tests.Gameplay
         {
             List<GameObject> physicObjects = null;
             GetAllPhysicObjectsInGameScene(out physicObjects);
-            m_PhysicsSimulationScene2D.AddObjects(physicObjects);
+            ReplicateObstacles(ref physicObjects);
+            ListPool<GameObject>.Release(physicObjects);
         }
 
         private void GetAllPhysicObjectsInGameScene(out List<GameObject> physicObjects)
@@ -336,6 +231,22 @@ namespace Tests.Gameplay
                 physicObjects.Add(taggedPhysicObject);
             }
         }
+        private void ReplicateObstacles(ref List<GameObject> objects)
+        {
+            int[] ids = new int[objects.Count];
+            for (int i = 0; i < objects.Count; i++)
+            {
+                GameObject ghostObj = Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
+                ghostObj.RemoveAllComponentsFromChildrenAndSelf(
+                    typeof(Grid),
+                    typeof(Tilemap),
+                    typeof(TilemapCollider2D)
+                );
+                ids[i] = ghostObj.GetInstanceID();
+            }
+            NativeArray<int> toMoveObj = new NativeArray<int>(ids, Allocator.Temp);
+            SceneManager.MoveGameObjectsToScene(toMoveObj, m_simulationScene);
+        }
 
         private void Update()
         {
@@ -347,32 +258,104 @@ namespace Tests.Gameplay
 
         private void LateUpdate()
         {
-            m_PhysicsSimulationScene2D.MoveAllPendingObjectToScene();
+         
         }
 
-        public void SimulateTrajectory(Vector2 position, Vector2 velocity, LineRenderer visualRenderer = null)
+        #region Simulate Trajectory
+        
+        public void SimulateTrajectory(TrajectorySimulationRequestObject request)
         {
-            GameObject trajectoryObj = new GameObject("TrajcetoryObject");
-            trajectoryObj.transform.position = new Vector3(position.x, position.y, trajectoryObj.transform.position.z);
-            Collider2D collider2D = trajectoryObj.AddComponent<CircleCollider2D>();
-            Rigidbody2D rb = trajectoryObj.AddComponent<Rigidbody2D>();
-            SceneManager.MoveGameObjectToScene(trajectoryObj, m_PhysicsSimulationScene2D.SimulationScene);
+            GameObject trajectoryObj = Instantiate(request.cloneObject);
+            trajectoryObj.transform.position = new Vector3(request.OriginPoint.x, request.OriginPoint.y, trajectoryObj.transform.position.z);
+            Rigidbody2D rb = trajectoryObj.GetComponent<Rigidbody2D>();
+            SceneManager.MoveGameObjectToScene(trajectoryObj, m_simulationScene);
             rb.bodyType = RigidbodyType2D.Dynamic;
-            rb.AddForce(velocity);
-            if (visualRenderer != null)
+            rb.AddForce(request.Force, ForceMode2D.Impulse);
+            if (request.Renderer != null)
             {
-                visualRenderer.positionCount = m_simulationSteps;
+                request.Renderer.positionCount = request.SimulationSteps + 1;
+                request.Renderer.SetPosition(0, new Vector3(request.OriginPoint.x, request.OriginPoint.y));
             }
 
-            for (int i = 0; i < m_simulationSteps; i++)
+            for (int i = 1; i < request.SimulationSteps + 1; i++)
             {
-                m_PhysicsSimulationScene2D.PhysicsScene2D.Simulate(Time.fixedDeltaTime);
-                if(visualRenderer != null)
-                    visualRenderer.SetPosition(i, trajectoryObj.transform.position);
+                m_PhysicsScene.Simulate(Time.fixedDeltaTime);
+                if(request.Renderer != null)
+                    request.Renderer.SetPosition(i, trajectoryObj.transform.position);
                 Debug.Log($"Trajectory Object Position {trajectoryObj.transform.position}");
             }
             Destroy(trajectoryObj);
+        }
+        // public void SimulateTrajectory(TrajectorySimulationRequestNoObject request)
+        // {
+        //     Rigidbody2D rb = null;
+        //     GameObject trajectoryObj = CreateGameObjectForRequest(request, out rb);
+        //     trajectoryObj.transform.position = new Vector3(request.OriginPoint.x, request.OriginPoint.y, trajectoryObj.transform.position.z);
+        //     SceneManager.MoveGameObjectToScene(trajectoryObj, m_simulationScene);
+        //     
+        //     rb.AddForce(request.Force, ForceMode2D.Impulse);
+        //     if (request.Renderer != null)
+        //     {
+        //         request.Renderer.positionCount = request.SimulationSteps + 1;
+        //         request.Renderer.SetPosition(0, new Vector3(request.OriginPoint.x, request.OriginPoint.y));
+        //     }
+        //     
+        //     for (int i = 1; i < request.SimulationSteps + 1; i++)
+        //     {
+        //         m_PhysicsScene.Simulate(Time.fixedDeltaTime);
+        //         if(request.Renderer != null)
+        //             request.Renderer.SetPosition(i, trajectoryObj.transform.position);
+        //     }
+        //     Destroy(trajectoryObj);
+        //     //m_physicsPool.Return(trajectoryObj);
+        // }
+        
+        public void SimulateTrajectory(TrajectorySimulationRequestNoObject request)
+        {
+            PhysicsObject physicsObject = m_pool.Request(request.Type);
+            Rigidbody2D rb = physicsObject.Rigidbody2D;
+            physicsObject.PhysicObjectTransform.position = new Vector3(request.OriginPoint.x, request.OriginPoint.y, physicsObject.PhysicObjectTransform.position.z);
+            
+            rb.AddForce(request.Force, ForceMode2D.Impulse);
+            if (request.Renderer != null)
+            {
+                request.Renderer.positionCount = request.SimulationSteps + 1;
+                request.Renderer.SetPosition(0, new Vector3(request.OriginPoint.x, request.OriginPoint.y));
+            }
+            
+            for (int i = 1; i < request.SimulationSteps + 1; i++)
+            {
+                m_PhysicsScene.Simulate(Time.fixedDeltaTime);
+                if(request.Renderer != null)
+                    request.Renderer.SetPosition(i, physicsObject.PhysicObjectTransform.position);
+            }
+            m_pool.Return(physicsObject);
             //m_physicsPool.Return(trajectoryObj);
         }
+
+        #region Simulate Trajectory Helper Methods
+
+        // private GameObject CreateGameObjectForRequest(TrajectorySimulationRequestNoObject request, out Rigidbody2D rb)
+        // {
+        //     GameObject trajectoryObj = new GameObject("TrajectoryObject");
+        //     rb = trajectoryObj.AddComponent<Rigidbody2D>();
+        //     switch (request.Type)
+        //     {
+        //         case Collider2DType.Box:
+        //             trajectoryObj.AddComponent<BoxCollider2D>();
+        //             break;
+        //         case Collider2DType.Circle:
+        //             trajectoryObj.AddComponent<CircleCollider2D>();
+        //             break;
+        //         case Collider2DType.Capsule:
+        //             trajectoryObj.AddComponent<CapsuleCollider2D>();
+        //             break;
+        //     }
+        //     return trajectoryObj;
+        // }
+
+        #endregion
+        
+        #endregion
     }
 }
