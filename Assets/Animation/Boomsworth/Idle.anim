@@ -29,7 +29,7 @@ AnimationClip:
     - time: 1
       value: {fileID: -723258881, guid: 31e7fde8c3e0d8f4794f836a6bc589fb, type: 3}
     attribute: m_Sprite
-    path: BoomsworthView
+    path: 
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -41,7 +41,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 613623507
+      path: 0
       attribute: 0
       script: {fileID: 0}
       typeID: 212

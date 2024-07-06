@@ -7,6 +7,7 @@ using Misc.Singelton;
 using Pool;
 using SceneManagment;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
@@ -157,7 +158,9 @@ namespace Tests.Gameplay
         {
             GameObject newObj = new GameObject(string.Concat("PhysicsObj_", 
                 m_pooledObjects.Count.ToString()));
+            newObj.layer = LayerMask.NameToLayer("PhysicsLayer");
             Rigidbody2D rb = newObj.AddComponent<Rigidbody2D>();
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
             Collider2D collider2D = null;
             switch (type)
             {
@@ -179,7 +182,7 @@ namespace Tests.Gameplay
 
     }
     
-    public class PhysicsSimulationManager : MonoBehaviorSingleton<PhysicsSimulationManager>
+    public class PhysicsManager : MonoBehaviorSingleton<PhysicsManager>
     {
         private Scene m_simulationScene;
         private PhysicsScene2D m_PhysicsScene;
@@ -188,6 +191,9 @@ namespace Tests.Gameplay
         
         [Header("Listening To")] [SerializeField]
         private VoidEventChannelSO on_SceneReady = default;
+
+        [SerializeField] 
+        private VoidEventChannelSO on_launchedProjectileStopped = default;
 
         protected override void Awake()
         {
@@ -208,6 +214,7 @@ namespace Tests.Gameplay
         {
             on_SceneReady.OnEventRaised -= OnGameSceneReady;
         }
+        
 
         private void OnGameSceneReady()
         {
@@ -234,13 +241,17 @@ namespace Tests.Gameplay
         private void ReplicateObstacles(ref List<GameObject> objects)
         {
             int[] ids = new int[objects.Count];
+            int Layer = LayerMask.NameToLayer("PhysicsLayer");
             for (int i = 0; i < objects.Count; i++)
             {
                 GameObject ghostObj = Instantiate(objects[i], objects[i].transform.position, objects[i].transform.rotation);
+                ghostObj.layer = Layer;
                 ghostObj.RemoveAllComponentsFromChildrenAndSelf(
                     typeof(Grid),
                     typeof(Tilemap),
-                    typeof(TilemapCollider2D)
+                    typeof(TilemapCollider2D),
+                    typeof(PolygonCollider2D),
+                    typeof(BoxCollider2D)
                 );
                 ids[i] = ghostObj.GetInstanceID();
             }
@@ -262,7 +273,6 @@ namespace Tests.Gameplay
         }
 
         #region Simulate Trajectory
-        
         public void SimulateTrajectory(TrajectorySimulationRequestObject request)
         {
             GameObject trajectoryObj = Instantiate(request.cloneObject);
@@ -286,35 +296,12 @@ namespace Tests.Gameplay
             }
             Destroy(trajectoryObj);
         }
-        // public void SimulateTrajectory(TrajectorySimulationRequestNoObject request)
-        // {
-        //     Rigidbody2D rb = null;
-        //     GameObject trajectoryObj = CreateGameObjectForRequest(request, out rb);
-        //     trajectoryObj.transform.position = new Vector3(request.OriginPoint.x, request.OriginPoint.y, trajectoryObj.transform.position.z);
-        //     SceneManager.MoveGameObjectToScene(trajectoryObj, m_simulationScene);
-        //     
-        //     rb.AddForce(request.Force, ForceMode2D.Impulse);
-        //     if (request.Renderer != null)
-        //     {
-        //         request.Renderer.positionCount = request.SimulationSteps + 1;
-        //         request.Renderer.SetPosition(0, new Vector3(request.OriginPoint.x, request.OriginPoint.y));
-        //     }
-        //     
-        //     for (int i = 1; i < request.SimulationSteps + 1; i++)
-        //     {
-        //         m_PhysicsScene.Simulate(Time.fixedDeltaTime);
-        //         if(request.Renderer != null)
-        //             request.Renderer.SetPosition(i, trajectoryObj.transform.position);
-        //     }
-        //     Destroy(trajectoryObj);
-        //     //m_physicsPool.Return(trajectoryObj);
-        // }
-        
         public void SimulateTrajectory(TrajectorySimulationRequestNoObject request)
         {
             PhysicsObject physicsObject = m_pool.Request(request.Type);
             Rigidbody2D rb = physicsObject.Rigidbody2D;
             physicsObject.PhysicObjectTransform.position = new Vector3(request.OriginPoint.x, request.OriginPoint.y, physicsObject.PhysicObjectTransform.position.z);
+            physicsObject.PhysicObjectTransform.localScale = Vector3.one;
             
             rb.AddForce(request.Force, ForceMode2D.Impulse);
             if (request.Renderer != null)
@@ -332,30 +319,23 @@ namespace Tests.Gameplay
             m_pool.Return(physicsObject);
             //m_physicsPool.Return(trajectoryObj);
         }
-
-        #region Simulate Trajectory Helper Methods
-
-        // private GameObject CreateGameObjectForRequest(TrajectorySimulationRequestNoObject request, out Rigidbody2D rb)
-        // {
-        //     GameObject trajectoryObj = new GameObject("TrajectoryObject");
-        //     rb = trajectoryObj.AddComponent<Rigidbody2D>();
-        //     switch (request.Type)
-        //     {
-        //         case Collider2DType.Box:
-        //             trajectoryObj.AddComponent<BoxCollider2D>();
-        //             break;
-        //         case Collider2DType.Circle:
-        //             trajectoryObj.AddComponent<CircleCollider2D>();
-        //             break;
-        //         case Collider2DType.Capsule:
-        //             trajectoryObj.AddComponent<CapsuleCollider2D>();
-        //             break;
-        //     }
-        //     return trajectoryObj;
-        // }
-
         #endregion
+        #region Trajectory
+
+        public void LaunchTrajectory(BoomsWorth boomsWorth, Vector2 pos, Vector2 force)
+        {
+            BoomsWorth boomsWorthProjectile = Instantiate(boomsWorth, pos, quaternion.identity);
+            boomsWorthProjectile.Rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+            on_launchedProjectileStopped = boomsWorthProjectile.OnVelocityStopped;
+            on_launchedProjectileStopped.OnEventRaised += ProjectilStopped;
+        }
         
         #endregion
+        
+        private void ProjectilStopped()
+        {
+            Debug.Log("Projectile has Stopped");
+            on_launchedProjectileStopped.OnEventRaised -= ProjectilStopped;
+        }
     }
 }

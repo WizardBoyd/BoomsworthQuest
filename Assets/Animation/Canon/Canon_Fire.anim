@@ -33,7 +33,7 @@ AnimationClip:
     - time: 0.41666666
       value: {fileID: 1152535173, guid: cebe01f57a44bf44ebe80d352a9a45a9, type: 3}
     attribute: m_Sprite
-    path: CanonShaftPivot/CanonShaftView
+    path: CanonShaftPivot/CanonShaft
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -54,7 +54,7 @@ AnimationClip:
     - time: 0.6666667
       value: {fileID: 0}
     attribute: m_Sprite
-    path: CanonShaftPivot/ExplosionEffect
+    path: CanonShaftPivot/CanonExitPoint
     classID: 212
     script: {fileID: 0}
     flags: 2
@@ -66,7 +66,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 2277280910
+      path: 2887955454
       attribute: 0
       script: {fileID: 0}
       typeID: 212
@@ -75,7 +75,7 @@ AnimationClip:
       isIntCurve: 0
       isSerializeReferenceCurve: 0
     - serializedVersion: 2
-      path: 4220197068
+      path: 2595478839
       attribute: 0
       script: {fileID: 0}
       typeID: 212

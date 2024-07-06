@@ -16,6 +16,8 @@ namespace Tests.Gameplay
 
         [Header("Configuration")] 
         [SerializeField]
+        private BoomsWorth BoomsWorthPrefab;
+        [SerializeField]
         private DragRotateHandler2D CanonRotationHandler;
         [SerializeField] 
         private Transform CanonBallChamber;
@@ -48,9 +50,9 @@ namespace Tests.Gameplay
                 request.Type = Collider2DType.Circle;
                 request.OriginPoint = CanonBallChamber.transform.position;
                 request.Renderer = m_lineRenderer;
-                request.SimulationSteps = 100;
+                request.SimulationSteps = 200;
                 request.Force = CanonBallChamber.right * 100;
-                PhysicsSimulationManager.Instance.SimulateTrajectory(request);
+                PhysicsManager.Instance.SimulateTrajectory(request);
             }
         }
         
@@ -62,6 +64,11 @@ namespace Tests.Gameplay
         public void On_Fired()
         {
             Debug.Log("The Canon Ball Is Ready To Fire");
+            PhysicsManager.Instance.LaunchTrajectory(
+                BoomsWorthPrefab,
+                CanonBallChamber.transform.position,
+                CanonBallChamber.right * 100
+                );
         }
     }
 }

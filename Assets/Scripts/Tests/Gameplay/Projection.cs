@@ -41,7 +41,7 @@ namespace Tests.Gameplay
             GhostBoomsworth.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
             Destroy(GhostBoomsworth.transform.GetChild(0).gameObject);
             SceneManager.MoveGameObjectToScene(GhostBoomsworth.gameObject, m_simulationScene);
-            GhostBoomsworth.SendFlying(veloctiy);
+            //GhostBoomsworth.SendFlying(veloctiy);
 
             m_lineRenderer.positionCount = m_maxPhysicsFrameIterations;
 
