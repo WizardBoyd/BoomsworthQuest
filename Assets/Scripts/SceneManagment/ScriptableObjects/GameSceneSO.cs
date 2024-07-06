@@ -9,7 +9,7 @@ using UnityEngine.AddressableAssets;
 
 namespace SceneManagment.ScriptableObjects
 {
-    [CreateAssetMenu(menuName = "Scene/Game Scene")]
+    [CreateAssetMenu(menuName = "Scene/GameScene")]
     public class GameSceneSO : ScriptableObject
     {
         public GameSceneType SceneType;

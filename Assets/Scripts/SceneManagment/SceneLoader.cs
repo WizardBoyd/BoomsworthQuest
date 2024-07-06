@@ -58,6 +58,9 @@ namespace SceneManagment
         //is the Scene Loader currently loading a scene helps prevent a new load request while already handling one.
         private bool m_isLoading = false;
 
+        //This is for when loading out of game back into menu level we want to wait before loading back into menu
+        private AsyncOperation m_currentlyLoadedPhysicsScene = null;
+
         private void OnEnable()
         {
             m_LoadLevel.OnLoadingRequested += LoadLevel;
@@ -96,8 +99,14 @@ namespace SceneManagment
                         m_gameplayManagerSceneInstance = m_gameplayManagerLoadingOpHandle.Result;
                         
                         //Scene is ready
-                        m_SceneReadyChannel.RaiseEvent();
+                        StartCoroutine(ColdStartUp());
                 }
+        }
+
+        private IEnumerator ColdStartUp()
+        {
+                yield return new WaitForSecondsRealtime(1);
+                m_SceneReadyChannel.RaiseEvent();
         }
 #endif
             
@@ -207,8 +216,23 @@ namespace SceneManagment
 #endif
                     }
 
+                    if (m_currentlyLoadedPhysicsScene != null)
+                    {
+                            yield return m_currentlyLoadedPhysicsScene;
+                            m_currentlyLoadedPhysicsScene = null;
+                    }
+
                     LoadNewScene();
             }
+
+            public void UnloadPhysicsScene(Scene physicsScene)
+            {
+                    if (physicsScene.isLoaded)
+                    {
+                            m_currentlyLoadedPhysicsScene = SceneManager.UnloadSceneAsync(physicsScene);
+                    }
+            }
+            
 
             private void LoadNewScene()
             {

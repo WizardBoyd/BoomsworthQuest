@@ -5,7 +5,7 @@ using WizardSave;
 
 namespace SceneManagment.ScriptableObjects.Actions
 {
-    [CreateAssetMenu(fileName = "First Time Start up Action", menuName = "Scene/Scene Actions/First Time Start up Action", order = 0)]
+    [CreateAssetMenu(fileName = "First Time Start up Action", menuName = "Scene/SceneActions/First Time Start up Action", order = 0)]
     public class FirstTimeStartupAction : BaseSceneChangeAction
     {
         public override void PerformAction()

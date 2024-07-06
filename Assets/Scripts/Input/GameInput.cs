@@ -26,14 +26,39 @@ namespace Input
     ""name"": ""GameInput"",
     ""maps"": [
         {
-            ""name"": ""GenericActions"",
-            ""id"": ""404ad226-e74c-4f35-9d18-5d533168754b"",
+            ""name"": ""Gameplay"",
+            ""id"": ""3b271445-4799-4fa0-9e24-fb94234687bd"",
             ""actions"": [
                 {
+<<<<<<< Updated upstream
                     ""name"": ""TouchButton"",
                     ""type"": ""PassThrough"",
                     ""id"": ""1d3827f5-39e0-453f-a10f-c456e829227a"",
                     ""expectedControlType"": ""Button"",
+=======
+                    ""name"": ""TouchInput"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""b08c23bb-3e21-43e8-8aa6-63f6ce80ab97"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""f3f69006-6751-41f3-b702-481a29cde8fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""TouchPosition"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f8dce9cb-26b8-4b43-b68e-b24d1f6bb19d"",
+                    ""expectedControlType"": ""Vector2"",
+>>>>>>> Stashed changes
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -42,12 +67,43 @@ namespace Input
             ""bindings"": [
                 {
                     ""name"": """",
+<<<<<<< Updated upstream
                     ""id"": ""43ed5bbe-765a-4e48-a859-bf928afee906"",
                     ""path"": """",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""TouchButton"",
+=======
+                    ""id"": ""bab315a9-84b1-437c-a092-8bee130df0b7"",
+                    ""path"": ""<Touchscreen>/primaryTouch"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""89577bba-5d53-4bf2-b1e0-065a7fa1d33b"",
+                    ""path"": ""<Touchscreen>/primaryTouch/press"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": ""TouchScreen"",
+                    ""action"": ""TouchPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1366e5ae-ca2b-41f5-ab13-7c9749601d8a"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""TouchPosition"",
+>>>>>>> Stashed changes
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -56,9 +112,17 @@ namespace Input
     ],
     ""controlSchemes"": []
 }");
+<<<<<<< Updated upstream
             // GenericActions
             m_GenericActions = asset.FindActionMap("GenericActions", throwIfNotFound: true);
             m_GenericActions_TouchButton = m_GenericActions.FindAction("TouchButton", throwIfNotFound: true);
+=======
+            // Gameplay
+            m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
+            m_Gameplay_TouchInput = m_Gameplay.FindAction("TouchInput", throwIfNotFound: true);
+            m_Gameplay_TouchPress = m_Gameplay.FindAction("TouchPress", throwIfNotFound: true);
+            m_Gameplay_TouchPosition = m_Gameplay.FindAction("TouchPosition", throwIfNotFound: true);
+>>>>>>> Stashed changes
         }
 
         public void Dispose()
@@ -117,6 +181,7 @@ namespace Input
             return asset.FindBinding(bindingMask, out action);
         }
 
+<<<<<<< Updated upstream
         // GenericActions
         private readonly InputActionMap m_GenericActions;
         private List<IGenericActionsActions> m_GenericActionsActionsCallbackInterfaces = new List<IGenericActionsActions>();
@@ -127,44 +192,104 @@ namespace Input
             public GenericActionsActions(@GameInput wrapper) { m_Wrapper = wrapper; }
             public InputAction @TouchButton => m_Wrapper.m_GenericActions_TouchButton;
             public InputActionMap Get() { return m_Wrapper.m_GenericActions; }
+=======
+        // Gameplay
+        private readonly InputActionMap m_Gameplay;
+        private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
+        private readonly InputAction m_Gameplay_TouchInput;
+        private readonly InputAction m_Gameplay_TouchPress;
+        private readonly InputAction m_Gameplay_TouchPosition;
+        public struct GameplayActions
+        {
+            private @GameInput m_Wrapper;
+            public GameplayActions(@GameInput wrapper) { m_Wrapper = wrapper; }
+            public InputAction @TouchInput => m_Wrapper.m_Gameplay_TouchInput;
+            public InputAction @TouchPress => m_Wrapper.m_Gameplay_TouchPress;
+            public InputAction @TouchPosition => m_Wrapper.m_Gameplay_TouchPosition;
+            public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
+>>>>>>> Stashed changes
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(GenericActionsActions set) { return set.Get(); }
-            public void AddCallbacks(IGenericActionsActions instance)
+            public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+            public void AddCallbacks(IGameplayActions instance)
             {
+<<<<<<< Updated upstream
                 if (instance == null || m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Add(instance);
                 @TouchButton.started += instance.OnTouchButton;
                 @TouchButton.performed += instance.OnTouchButton;
                 @TouchButton.canceled += instance.OnTouchButton;
+=======
+                if (instance == null || m_Wrapper.m_GameplayActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_GameplayActionsCallbackInterfaces.Add(instance);
+                @TouchInput.started += instance.OnTouchInput;
+                @TouchInput.performed += instance.OnTouchInput;
+                @TouchInput.canceled += instance.OnTouchInput;
+                @TouchPress.started += instance.OnTouchPress;
+                @TouchPress.performed += instance.OnTouchPress;
+                @TouchPress.canceled += instance.OnTouchPress;
+                @TouchPosition.started += instance.OnTouchPosition;
+                @TouchPosition.performed += instance.OnTouchPosition;
+                @TouchPosition.canceled += instance.OnTouchPosition;
+>>>>>>> Stashed changes
             }
 
-            private void UnregisterCallbacks(IGenericActionsActions instance)
+            private void UnregisterCallbacks(IGameplayActions instance)
             {
+<<<<<<< Updated upstream
                 @TouchButton.started -= instance.OnTouchButton;
                 @TouchButton.performed -= instance.OnTouchButton;
                 @TouchButton.canceled -= instance.OnTouchButton;
+=======
+                @TouchInput.started -= instance.OnTouchInput;
+                @TouchInput.performed -= instance.OnTouchInput;
+                @TouchInput.canceled -= instance.OnTouchInput;
+                @TouchPress.started -= instance.OnTouchPress;
+                @TouchPress.performed -= instance.OnTouchPress;
+                @TouchPress.canceled -= instance.OnTouchPress;
+                @TouchPosition.started -= instance.OnTouchPosition;
+                @TouchPosition.performed -= instance.OnTouchPosition;
+                @TouchPosition.canceled -= instance.OnTouchPosition;
+>>>>>>> Stashed changes
             }
 
-            public void RemoveCallbacks(IGenericActionsActions instance)
+            public void RemoveCallbacks(IGameplayActions instance)
             {
-                if (m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Remove(instance))
+                if (m_Wrapper.m_GameplayActionsCallbackInterfaces.Remove(instance))
                     UnregisterCallbacks(instance);
             }
 
-            public void SetCallbacks(IGenericActionsActions instance)
+            public void SetCallbacks(IGameplayActions instance)
             {
-                foreach (var item in m_Wrapper.m_GenericActionsActionsCallbackInterfaces)
+                foreach (var item in m_Wrapper.m_GameplayActionsCallbackInterfaces)
                     UnregisterCallbacks(item);
-                m_Wrapper.m_GenericActionsActionsCallbackInterfaces.Clear();
+                m_Wrapper.m_GameplayActionsCallbackInterfaces.Clear();
                 AddCallbacks(instance);
             }
         }
+<<<<<<< Updated upstream
         public GenericActionsActions @GenericActions => new GenericActionsActions(this);
         public interface IGenericActionsActions
         {
             void OnTouchButton(InputAction.CallbackContext context);
+=======
+        public GameplayActions @Gameplay => new GameplayActions(this);
+        private int m_TouchScreenSchemeIndex = -1;
+        public InputControlScheme TouchScreenScheme
+        {
+            get
+            {
+                if (m_TouchScreenSchemeIndex == -1) m_TouchScreenSchemeIndex = asset.FindControlSchemeIndex("TouchScreen");
+                return asset.controlSchemes[m_TouchScreenSchemeIndex];
+            }
+        }
+        public interface IGameplayActions
+        {
+            void OnTouchInput(InputAction.CallbackContext context);
+            void OnTouchPress(InputAction.CallbackContext context);
+            void OnTouchPosition(InputAction.CallbackContext context);
+>>>>>>> Stashed changes
         }
     }
 }
