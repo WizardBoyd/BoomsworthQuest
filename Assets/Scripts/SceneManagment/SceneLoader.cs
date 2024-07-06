@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using Events.ScriptableObjects;
-using Input;
 using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
 using SceneManagment.ScriptableObjects.Actions;
