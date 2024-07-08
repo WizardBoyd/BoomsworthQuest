@@ -44,18 +44,32 @@ namespace Tests.Gameplay
         
         private void Update()
         {
+            // if (CanonRotationHandler.IsDragging)
+            // {
+            //     TrajectorySimulationRequestNoObject request = new TrajectorySimulationRequestNoObject();
+            //     request.Type = Collider2DType.Circle;
+            //     request.OriginPoint = CanonBallChamber.transform.position;
+            //     request.Renderer = m_lineRenderer;
+            //     request.SimulationSteps = 1000;
+            //     request.Force = CanonBallChamber.right * 200;
+            //     PhysicsManager.Instance.SimulateTrajectory(request);
+            // }
+        }
+
+        private void FixedUpdate()
+        {
             if (CanonRotationHandler.IsDragging)
             {
                 TrajectorySimulationRequestNoObject request = new TrajectorySimulationRequestNoObject();
                 request.Type = Collider2DType.Circle;
                 request.OriginPoint = CanonBallChamber.transform.position;
                 request.Renderer = m_lineRenderer;
-                request.SimulationSteps = 200;
-                request.Force = CanonBallChamber.right * 100;
+                request.SimulationSteps = 1000;
+                request.Force = CanonBallChamber.right * 200;
                 PhysicsManager.Instance.SimulateTrajectory(request);
             }
         }
-        
+
         public void Fire()
         {
             Animator.SetTrigger("Fire");
@@ -67,7 +81,7 @@ namespace Tests.Gameplay
             PhysicsManager.Instance.LaunchTrajectory(
                 BoomsWorthPrefab,
                 CanonBallChamber.transform.position,
-                CanonBallChamber.right * 100
+                CanonBallChamber.right * 200
                 );
         }
     }

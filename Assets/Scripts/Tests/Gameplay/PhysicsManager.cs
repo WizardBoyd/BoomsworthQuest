@@ -326,6 +326,7 @@ namespace Tests.Gameplay
         {
             BoomsWorth boomsWorthProjectile = Instantiate(boomsWorth, pos, quaternion.identity);
             boomsWorthProjectile.Rigidbody2D.AddForce(force, ForceMode2D.Impulse);
+            boomsWorthProjectile.HasLaunched = true;
             on_launchedProjectileStopped = boomsWorthProjectile.OnVelocityStopped;
             on_launchedProjectileStopped.OnEventRaised += ProjectilStopped;
         }

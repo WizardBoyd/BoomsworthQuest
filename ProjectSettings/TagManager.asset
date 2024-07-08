@@ -14,8 +14,8 @@ TagManager:
   - UI
   - UserUI
   - PhysicsLayer
-  - 
-  - 
+  - EnviornmentLayer
+  - EntityLayer
   - 
   - 
   - 
@@ -41,4 +41,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background Layer
+    uniqueID: 4196135891
+    locked: 0
+  - name: Entity Layer
+    uniqueID: 1073683217
     locked: 0

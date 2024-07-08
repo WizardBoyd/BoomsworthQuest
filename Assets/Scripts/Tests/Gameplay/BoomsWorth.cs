@@ -34,12 +34,13 @@ namespace Tests.Gameplay
         {
             if(!HasLaunched)
                 return;
+            CheckIfStopped();
             
         }
 
         private void CheckIfStopped()
         {
-            if (Rigidbody2D.velocity.magnitude < stopThreashold && !HasLaunched)
+            if (Rigidbody2D.velocity.magnitude < stopThreashold && HasLaunched)
             {
                 m_OnVelocityStopped.RaiseEvent();
                 Destroy(gameObject);

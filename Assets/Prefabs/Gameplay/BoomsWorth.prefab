@@ -121,7 +121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 159a3edc35634a0bb9706a57225fcc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stopThreashold: 0.1
+  stopThreashold: 0.05
   m_OnVelocityStopped: {fileID: 11400000, guid: 5e83fbf7a1d23144a9a2eee42cc3b5e1, type: 2}
 --- !u!50 &4372916890041811402
 Rigidbody2D:
