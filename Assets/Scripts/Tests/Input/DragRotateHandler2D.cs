@@ -9,13 +9,13 @@ namespace Tests.Input
     /// </summary>
     public class DragRotateHandler2D : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
-        private Camera m_camera;
+        private UnityEngine.Camera m_camera;
         
         public bool IsDragging { get; private set; }
 
         private void Awake()
         {
-            m_camera = Camera.main;
+            m_camera = UnityEngine.Camera.main;
         }
         
         public void OnDrag(PointerEventData eventData)

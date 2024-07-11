@@ -546,5 +546,5 @@ SpriteAtlas:
   - Nature_environment_01_48
   - Nature_environment_01_1
   m_RenderDataMap: {}
-  m_Tag: Tiles
+  m_Tag: 2DAssets
   m_IsVariant: 0

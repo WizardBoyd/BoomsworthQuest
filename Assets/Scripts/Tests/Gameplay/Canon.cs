@@ -21,6 +21,9 @@ namespace Tests.Gameplay
         private DragRotateHandler2D CanonRotationHandler;
         [SerializeField] 
         private Transform CanonBallChamber;
+
+        [SerializeField][Range(0,1000)]
+        private float forceMultiplier;
         
         [Header("Listening To")] 
         [SerializeField]
@@ -42,20 +45,6 @@ namespace Tests.Gameplay
             FuseLitChannel.OnEventRaised -= Fire;
         }
         
-        private void Update()
-        {
-            // if (CanonRotationHandler.IsDragging)
-            // {
-            //     TrajectorySimulationRequestNoObject request = new TrajectorySimulationRequestNoObject();
-            //     request.Type = Collider2DType.Circle;
-            //     request.OriginPoint = CanonBallChamber.transform.position;
-            //     request.Renderer = m_lineRenderer;
-            //     request.SimulationSteps = 1000;
-            //     request.Force = CanonBallChamber.right * 200;
-            //     PhysicsManager.Instance.SimulateTrajectory(request);
-            // }
-        }
-
         private void FixedUpdate()
         {
             if (CanonRotationHandler.IsDragging)
@@ -64,8 +53,8 @@ namespace Tests.Gameplay
                 request.Type = Collider2DType.Circle;
                 request.OriginPoint = CanonBallChamber.transform.position;
                 request.Renderer = m_lineRenderer;
-                request.SimulationSteps = 1000;
-                request.Force = CanonBallChamber.right * 200;
+                request.SimulationSteps = 50;
+                request.Force = CanonBallChamber.right * forceMultiplier;
                 PhysicsManager.Instance.SimulateTrajectory(request);
             }
         }
@@ -81,7 +70,7 @@ namespace Tests.Gameplay
             PhysicsManager.Instance.LaunchTrajectory(
                 BoomsWorthPrefab,
                 CanonBallChamber.transform.position,
-                CanonBallChamber.right * 200
+                CanonBallChamber.right * forceMultiplier
                 );
         }
     }

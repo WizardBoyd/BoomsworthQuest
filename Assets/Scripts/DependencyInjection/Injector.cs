@@ -23,12 +23,9 @@ namespace DependencyInjection
         static MonoBehaviour[] findMonoBehaviors() {
             return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
         }
-
-        protected override void Awake()
+        
+        public void PerformInjection()
         {
-            base.Awake();
-            
-            //Find all modules that implement IDependencyInjector
             var provides = findMonoBehaviors().OfType<IDependencyProvider>();
             foreach (IDependencyProvider provider in provides) {
                 RegisterProvider(provider);

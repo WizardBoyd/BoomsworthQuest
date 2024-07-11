@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DependencyInjection;
 using Events.ScriptableObjects;
 using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
@@ -96,7 +97,6 @@ namespace SceneManagment
                         //Blocking Call to wait
                         m_gameplayManagerLoadingOpHandle.WaitForCompletion();
                         m_gameplayManagerSceneInstance = m_gameplayManagerLoadingOpHandle.Result;
-                        
                         //Scene is ready
                         StartCoroutine(ColdStartUp());
                 }
@@ -105,6 +105,8 @@ namespace SceneManagment
         private IEnumerator ColdStartUp()
         {
                 yield return new WaitForSecondsRealtime(1);
+                //Inject Dependencies
+                Injector.Instance.PerformInjection();
                 m_SceneReadyChannel.RaiseEvent();
         }
 #endif
@@ -245,6 +247,8 @@ namespace SceneManagment
                     m_currentlyLoadedScene = m_sceneToLoad;
                     Scene scene = obj.Result.Scene;
                     SceneManager.SetActiveScene(scene);
+                    //Inject Dependencies
+                    Injector.Instance.PerformInjection();
                     yield return PerformEnterSceneActionsSequentially();
                     //We are no longer loading at this point
                     m_isLoading = false;
