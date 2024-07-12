@@ -55,7 +55,7 @@ namespace Camera
         {
             if(!EnsurePreconditions())
                 return;
-            if(m_touchInputReader.IsTouchingInteractable)
+            if(m_touchInputReader.IsTouchingInteractable && !m_touchInputReader.IsAppCurrentlyInteractable)
                 return;
             ProcessNavigation();
             ProcessTouchZoom();
@@ -141,7 +141,8 @@ namespace Camera
         {
             return m_camera.orthographicSize * 2;
         }
-
+        
+        
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

@@ -1,5 +1,6 @@
-using System;
+using DependencyInjection.attributes;
 using Events.ScriptableObjects;
+using Input;
 using SaveSystem;
 using UI.Properties;
 using UnityEngine;
@@ -31,6 +32,8 @@ namespace UI.ScreenControllers
         private VoidEventChannelSO m_OpenLanguageWindow = default;
 
         private UIFrame m_uiFrame;
+        [Inject]
+        private TouchInputReader m_touchInputReader;
 
         private void Awake()
         {
@@ -69,8 +72,17 @@ namespace UI.ScreenControllers
                 m_uiFrame.HidePanel(LevelSelectionScreenIds.HUDPlayPanel);
             }
         }
-        
-        private void CloseCurrentWindow() => m_uiFrame.CloseCurrentWindow();
+
+        private void CloseCurrentWindow()
+        {
+            m_uiFrame.CloseCurrentWindow();
+            if (!m_uiFrame.IsUIFrameEmpty)
+                m_touchInputReader.SetIsAppCurrentlyInteractable(true);
+            else
+            {
+                m_touchInputReader.SetIsAppCurrentlyInteractable(false);
+            }
+        }
 
         private void OpenSettingWindow() => m_uiFrame.OpenWindow<GameSettingsProperties>(LevelSelectionScreenIds.GameSettingWindow, new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
         

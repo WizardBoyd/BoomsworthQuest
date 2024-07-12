@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using DependencyInjection;
+using DependencyInjection.attributes;
 using Events.ScriptableObjects;
+using Input;
 using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
 using SceneManagment.ScriptableObjects.Actions;
@@ -60,6 +62,9 @@ namespace SceneManagment
 
         //This is for when loading out of game back into menu level we want to wait before loading back into menu
         private AsyncOperation m_currentlyLoadedPhysicsScene = null;
+        
+        [Inject]
+        private TouchInputReader m_touchInputReader;
 
         private void OnEnable()
         {
@@ -189,7 +194,7 @@ namespace SceneManagment
                     m_FadeRequestChannel.FadeOut(m_fadeDuration);
 
                     yield return new WaitForSeconds(m_fadeDuration);
-                    
+                    m_touchInputReader.SetIsAppCurrentlyInteractable(false);
                     if (m_showLoadingScreen)
                     {
                             m_toggleLoadingScreen.RaiseEvent(true);
@@ -249,6 +254,7 @@ namespace SceneManagment
                     SceneManager.SetActiveScene(scene);
                     //Inject Dependencies
                     Injector.Instance.PerformInjection();
+                    m_touchInputReader.SetIsAppCurrentlyInteractable(true);
                     yield return PerformEnterSceneActionsSequentially();
                     //We are no longer loading at this point
                     m_isLoading = false;

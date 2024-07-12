@@ -781,8 +781,8 @@ Transform:
   m_GameObject: {fileID: 615864825}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.744, y: 0.235, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.744, y: 0.34, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2023550588}
@@ -827,7 +827,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1073683217
   m_SortingLayer: 3
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_Sprite: {fileID: -1215611124, guid: c1844fffbcadeda45ba8adcc07a9a6b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1535,7 +1535,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1073683217
   m_SortingLayer: 3
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1152535173, guid: cebe01f57a44bf44ebe80d352a9a45a9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3050,7 +3050,6 @@ GameObject:
   - component: {fileID: 1739295518}
   - component: {fileID: 1739295517}
   - component: {fileID: 1739295516}
-  - component: {fileID: 1739295519}
   m_Layer: 9
   m_Name: Canon
   m_TagString: Untagged
@@ -3067,8 +3066,8 @@ Transform:
   m_GameObject: {fileID: 1739295514}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.92, y: 5.04, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -12.56, y: 5.6, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2023550588}
@@ -3216,19 +3215,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1739295519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739295514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4690f88f4dcf4cb4b54a504e429cb673, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_worldBounds: {fileID: 580102608}
 --- !u!1 &1925379910
 GameObject:
   m_ObjectHideFlags: 0
@@ -26912,7 +26898,7 @@ Transform:
   m_GameObject: {fileID: 2019047284}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.5862656, y: 7.9, z: -9.959341}
+  m_LocalPosition: {x: 1.7, y: 8.61, z: -9.959341}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27005,7 +26991,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.23
+  orthographic size: 10.43
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

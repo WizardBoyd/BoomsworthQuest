@@ -39,6 +39,9 @@ namespace Input
         public float DeltaDistanceBetweenFingers { get => DistanceBetweenFingers - PreviousFrameDistanceBetweenFingers; }
         public bool IsTouchingInteractable { get; private set; }
         public void SetIsTouchingInteractable(bool value) => IsTouchingInteractable = value;
+
+        public bool IsAppCurrentlyInteractable { get; private set; } = true;
+        public void SetIsAppCurrentlyInteractable(bool value) => IsAppCurrentlyInteractable = value;
         #endregion
 
         public delegate void TouchUpdate();
