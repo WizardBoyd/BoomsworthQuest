@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SceneManagment.ScriptableObjects.Actions
 {
-    [CreateAssetMenu(fileName = "Validate Files  Action", menuName = "Scene/Scene Actions/Validate Files Action", order = 0)]
+    [CreateAssetMenu(fileName = "Validate Files  Action", menuName = "Scene/SceneActions/Validate Files Action", order = 0)]
     public class ValidateFiles : BaseSceneChangeAction
     {
         [SerializeField] 

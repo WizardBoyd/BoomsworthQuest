@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SceneManagment.ScriptableObjects.Actions
 {
-    [CreateAssetMenu(fileName = "Load Core Files Action", menuName = "Scene/Scene Actions/Load Core Files Action", order = 0)]
+    [CreateAssetMenu(fileName = "Load Core Files Action", menuName = "Scene/SceneActions/Load Core Files Action", order = 0)]
     public class LoadCoreFiles : BaseSceneChangeAction
     {
         public override void PerformAction()

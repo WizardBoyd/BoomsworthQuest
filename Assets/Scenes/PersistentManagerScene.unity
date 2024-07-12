@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -263,6 +263,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_fadeChannel: {fileID: 11400000, guid: 02ab23515fb4d7143899193292fccdcc, type: 2}
+--- !u!1 &570350482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 570350484}
+  - component: {fileID: 570350483}
+  m_Layer: 0
+  m_Name: TouchInputHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &570350483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570350482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc2ae21511f84e8491b3e52fb0306805, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &570350484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570350482}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.260507, y: 13.744206, z: -10.038917}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &596027435
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +458,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &642111946
 RectTransform:
   m_ObjectHideFlags: 0
@@ -501,7 +545,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815151536}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -768,6 +812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_rootLoadingInterface: {fileID: 642111945}
   m_toggleScreen: {fileID: 11400000, guid: d4f1df3c6f9db6242b9524cd1f66c4cb, type: 2}
+  m_LoadingScreenRaycaster: {fileID: 815151537}
 --- !u!4 &1490014175
 Transform:
   m_ObjectHideFlags: 0
@@ -1112,3 +1157,4 @@ SceneRoots:
   - {fileID: 1490014175}
   - {fileID: 1783567591}
   - {fileID: 1001936104}
+  - {fileID: 570350484}

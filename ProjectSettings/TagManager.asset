@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - PhysicObject
   layers:
   - Default
   - TransparentFX
@@ -12,9 +13,9 @@ TagManager:
   - Water
   - UI
   - UserUI
-  - 
-  - 
-  - 
+  - PhysicsLayer
+  - EnviornmentLayer
+  - EntityLayer
   - 
   - 
   - 
@@ -40,4 +41,13 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background Layer
+    uniqueID: 4196135891
+    locked: 0
+  - name: Envionment Layer
+    uniqueID: 599748387
+    locked: 0
+  - name: Entity Layer
+    uniqueID: 1073683217
     locked: 0

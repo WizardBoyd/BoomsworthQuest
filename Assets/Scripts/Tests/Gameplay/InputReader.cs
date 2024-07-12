@@ -1,5 +1,4 @@
 using System;
-using Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -10,16 +9,14 @@ namespace Tests.Gameplay
 {
     public class InputReader
     {
-
-        public GameInput m_playerInput;
+        
 
         public InputReader()
         {
-            m_playerInput = new GameInput();
-            m_playerInput.Enable();
-            m_playerInput.GenericActions.TapAction.started += TapActionOnstarted;
-            m_playerInput.GenericActions.TapAction.performed += TapActionperformed;
-            m_playerInput.GenericActions.TapAction.started += TapActionCanceled;
+         
+            // m_playerInput.GenericActions.TapAction.started += TapActionOnstarted;
+            // m_playerInput.GenericActions.TapAction.performed += TapActionperformed;
+            // m_playerInput.GenericActions.TapAction.started += TapActionCanceled;
         }
 
         private void TapActionCanceled(InputAction.CallbackContext obj)
@@ -39,7 +36,6 @@ namespace Tests.Gameplay
 
         ~InputReader()
         {
-            m_playerInput.Dispose();
         }
         
         public void UpdateValues()

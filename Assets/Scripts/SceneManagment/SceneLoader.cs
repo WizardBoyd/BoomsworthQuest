@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using DependencyInjection;
+using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
 using Misc.Singelton;
@@ -58,6 +60,12 @@ namespace SceneManagment
         //is the Scene Loader currently loading a scene helps prevent a new load request while already handling one.
         private bool m_isLoading = false;
 
+        //This is for when loading out of game back into menu level we want to wait before loading back into menu
+        private AsyncOperation m_currentlyLoadedPhysicsScene = null;
+        
+        [Inject]
+        private TouchInputReader m_touchInputReader;
+
         private void OnEnable()
         {
             m_LoadLevel.OnLoadingRequested += LoadLevel;
@@ -94,10 +102,17 @@ namespace SceneManagment
                         //Blocking Call to wait
                         m_gameplayManagerLoadingOpHandle.WaitForCompletion();
                         m_gameplayManagerSceneInstance = m_gameplayManagerLoadingOpHandle.Result;
-                        
                         //Scene is ready
-                        m_SceneReadyChannel.RaiseEvent();
+                        StartCoroutine(ColdStartUp());
                 }
+        }
+
+        private IEnumerator ColdStartUp()
+        {
+                yield return new WaitForSecondsRealtime(1);
+                //Inject Dependencies
+                Injector.Instance.PerformInjection();
+                m_SceneReadyChannel.RaiseEvent();
         }
 #endif
             
@@ -179,7 +194,7 @@ namespace SceneManagment
                     m_FadeRequestChannel.FadeOut(m_fadeDuration);
 
                     yield return new WaitForSeconds(m_fadeDuration);
-                    
+                    m_touchInputReader.SetIsAppCurrentlyInteractable(false);
                     if (m_showLoadingScreen)
                     {
                             m_toggleLoadingScreen.RaiseEvent(true);
@@ -207,8 +222,23 @@ namespace SceneManagment
 #endif
                     }
 
+                    if (m_currentlyLoadedPhysicsScene != null)
+                    {
+                            yield return m_currentlyLoadedPhysicsScene;
+                            m_currentlyLoadedPhysicsScene = null;
+                    }
+
                     LoadNewScene();
             }
+
+            public void UnloadPhysicsScene(Scene physicsScene)
+            {
+                    if (physicsScene.isLoaded)
+                    {
+                            m_currentlyLoadedPhysicsScene = SceneManager.UnloadSceneAsync(physicsScene);
+                    }
+            }
+            
 
             private void LoadNewScene()
             {
@@ -222,6 +252,9 @@ namespace SceneManagment
                     m_currentlyLoadedScene = m_sceneToLoad;
                     Scene scene = obj.Result.Scene;
                     SceneManager.SetActiveScene(scene);
+                    //Inject Dependencies
+                    Injector.Instance.PerformInjection();
+                    m_touchInputReader.SetIsAppCurrentlyInteractable(true);
                     yield return PerformEnterSceneActionsSequentially();
                     //We are no longer loading at this point
                     m_isLoading = false;

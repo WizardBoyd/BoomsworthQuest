@@ -2,6 +2,7 @@ using System;
 using Events.ScriptableObjects;
 using Misc.Singelton;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
@@ -11,6 +12,9 @@ namespace UI
         
         [Header("Listening On")]
         [SerializeField] private BoolEventChannelSO m_toggleScreen = default;
+
+        [Header("Components")] [SerializeField]
+        private GraphicRaycaster m_LoadingScreenRaycaster;
 
         private void OnEnable()
         {
@@ -25,6 +29,7 @@ namespace UI
         private void ToggleLoadingScreen(bool state)
         {
             m_rootLoadingInterface.SetActive(state);
+            m_LoadingScreenRaycaster.enabled = state;
         }
     }
 }

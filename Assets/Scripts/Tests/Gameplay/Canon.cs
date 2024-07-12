@@ -1,54 +1,77 @@
 using System;
+using Events.ScriptableObjects;
+using Tests.Input;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Tests.Gameplay
 {
-    public class Canon : MonoBehaviour, IPointerClickHandler,IBeginDragHandler, IDragHandler, IEndDragHandler
+    [RequireComponent(typeof(LineRenderer))]
+    public class Canon : MonoBehaviour
     {
-
-        private Vector2 pos;
-        private Vector2 direction;
+        private LineRenderer m_lineRenderer;
+        private GameObject m_currentGhostCanon = null;
         
-        public void OnBeginDrag(PointerEventData eventData)
+        [SerializeField] private Animator Animator;
+
+        [Header("Configuration")] 
+        [SerializeField]
+        private BoomsWorth BoomsWorthPrefab;
+        [SerializeField]
+        private DragRotateHandler2D CanonRotationHandler;
+        [SerializeField] 
+        private Transform CanonBallChamber;
+
+        [SerializeField][Range(0,1000)]
+        private float forceMultiplier;
+        
+        [Header("Listening To")] 
+        [SerializeField]
+        private VoidEventChannelSO FuseLitChannel = default;
+
+        private void Awake()
         {
-            Debug.Log($"Drag has begun {eventData.position}");
+            m_lineRenderer = GetComponent<LineRenderer>();
         }
 
-        public void OnDrag(PointerEventData eventData)
+        private void OnEnable()
         {
-            pos = Camera.main.ScreenToWorldPoint(eventData.position);
-            direction = pos - new Vector2(transform.position.x, transform.position.y);
-            float angle = Mathf.Atan2(direction.y,direction.x) * Mathf.Rad2Deg;
-            Debug.Log($"The angle is {angle}");
-            Quaternion roation = Quaternion.Euler(0,0,angle);
-            transform.rotation = roation;
+            FuseLitChannel.OnEventRaised += Fire;
 
-            //transform.LookAt(new Vector3(pos.x,pos.y, transform.position.z));
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        private void OnDisable()
         {
-            Debug.Log($"Drag has Ended {eventData.position}");
+            FuseLitChannel.OnEventRaised -= Fire;
         }
-
-        public void OnPointerClick(PointerEventData eventData)
+        
+        private void FixedUpdate()
         {
-            Debug.Log($"Pointer has been clicked");
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (Application.isPlaying)
+            if (CanonRotationHandler.IsDragging)
             {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(new Vector2(transform.position.x, transform.position.y),
-                    new Vector2(pos.x, transform.position.y));
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(new Vector2(pos.x, transform.position.y), new Vector2(pos.x, pos.y));
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(transform.position, direction);
+                TrajectorySimulationRequestNoObject request = new TrajectorySimulationRequestNoObject();
+                request.Type = Collider2DType.Circle;
+                request.OriginPoint = CanonBallChamber.transform.position;
+                request.Renderer = m_lineRenderer;
+                request.SimulationSteps = 50;
+                request.Force = CanonBallChamber.right * forceMultiplier;
+                PhysicsManager.Instance.SimulateTrajectory(request);
             }
+        }
+
+        public void Fire()
+        {
+            Animator.SetTrigger("Fire");
+        }
+
+        public void On_Fired()
+        {
+            Debug.Log("The Canon Ball Is Ready To Fire");
+            PhysicsManager.Instance.LaunchTrajectory(
+                BoomsWorthPrefab,
+                CanonBallChamber.transform.position,
+                CanonBallChamber.right * forceMultiplier
+                );
         }
     }
 }

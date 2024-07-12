@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace SceneManagment.ScriptableObjects.Actions
 {
-    [CreateAssetMenu(fileName = "Test Scene Change Action", menuName = "Scene/Scene Actions/Test Action", order = 0)]
+    [CreateAssetMenu(fileName = "Test Scene Change Action", menuName = "Scene/SceneActions/Test Action", order = 0)]
     public class TestSceneChangeAction : BaseSceneChangeAction
     {
         public override void PerformAction()
