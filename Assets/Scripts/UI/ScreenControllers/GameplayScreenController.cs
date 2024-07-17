@@ -5,6 +5,7 @@ using Input;
 using SaveSystem;
 using UI.Properties;
 using UnityEngine;
+using UnityEngine.UI;
 using WizardUI;
 
 namespace UI.ScreenControllers
@@ -17,6 +18,11 @@ namespace UI.ScreenControllers
             public const string LevelFailedWindow = "LevelFailedWindow";
             public const string LevelCompleteWindow = "LevelCompleteWindow";
         }
+        
+        [Header("Configuration")] 
+        [SerializeField]
+        private Vector2Int m_screenReferenceSize;
+        [SerializeField][Range(0f,1f)] private float m_uiScaleFactor = 1.0f;
         
         [Header("Settings")] 
         [SerializeField] private UISettings m_uiSettings = default;
@@ -38,6 +44,12 @@ namespace UI.ScreenControllers
         private void Awake()
         {
             m_uiFrame = new UISettings.UIFrameBuilder(m_uiSettings).SetInstanceAndRegister().Build();
+            if (m_uiFrame.TryGetComponent<CanvasScaler>(out CanvasScaler scaler))
+            {
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = m_screenReferenceSize;
+                scaler.matchWidthOrHeight = m_uiScaleFactor;
+            }
             ShowHideCorePanels(true);
         }
 
@@ -60,8 +72,8 @@ namespace UI.ScreenControllers
         {
             if (show)
             {
-                m_uiFrame.ShowPanel<GameSettingsProperties>(
-                    GameplayScreenIds.GameplayPausePanel,new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
+                // m_uiFrame.ShowPanel<GameSettingsProperties>(
+                //     GameplayScreenIds.GameplayPausePanel,new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
             }
             else
             {

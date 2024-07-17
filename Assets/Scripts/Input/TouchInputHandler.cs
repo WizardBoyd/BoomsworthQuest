@@ -20,7 +20,7 @@ namespace Input
             get => UnityEngine.Camera.main;
         }
         
-        private GameObject m_selectedObject;
+        //private GameObject m_selectedObject;
 
         protected override void Awake()
         {
@@ -41,7 +41,7 @@ namespace Input
         private void Update()
         {
             Process();
-            Debug.Log($"selected object: {m_selectedObject}");
+            //Debug.Log($"selected object: {m_selectedObject}");
         }
 
         private void LateUpdate()
@@ -63,7 +63,6 @@ namespace Input
         {
             if (m_gameCamera == null)
             {
-                Debug.LogError("No main camera found in the scene");
                 return false;
             }
             
@@ -93,49 +92,61 @@ namespace Input
 
         private void ProcessPrimaryFinger(Touch primaryTouch)
         {
-            m_touchInputReader.SetPrimaryFingerPhase(primaryTouch.phase);
-            if (primaryTouch.phase == TouchPhase.Began)
-            {
-                //Check if we are touching an interactable object
-                ProcessPrimaryFingerBegin(primaryTouch);
-            }
-            else if (primaryTouch.phase == TouchPhase.Moved)
-            {
-                m_touchInputReader.SetPrimaryFingerPosition(primaryTouch.screenPosition);
-            }
-            else if( primaryTouch.phase == TouchPhase.Ended || primaryTouch.phase == TouchPhase.Canceled)
-            {
-                m_touchInputReader.SetIsTouchingInteractable(false);
-                m_selectedObject = null;
-            }
+                m_touchInputReader.SetPrimaryFingerPhase(primaryTouch.phase);
+                if (primaryTouch.phase == TouchPhase.Began)
+                {
+                    //Check if we are touching an interactable object
+                    ProcessPrimaryFingerBegin(primaryTouch);
+                }
+                else if (primaryTouch.phase == TouchPhase.Moved)
+                {
+                    if (!m_touchInputReader.IsTouchingInteractable)
+                    {
+                        m_touchInputReader.SetPrimaryFingerPosition(primaryTouch.screenPosition);
+                    }
+                }
+                else if (primaryTouch.phase == TouchPhase.Ended || primaryTouch.phase == TouchPhase.Canceled)
+                {
+                    m_touchInputReader.SetIsTouchingInteractable(false);
+                    //m_selectedObject = null;
+                }
         }
         private void ProcessPrimaryFingerBegin(Touch primaryFinger)
         {
+            //Check if we under our first touch is an interactable object
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                Debug.Log("Is touching UI element");
+                m_touchInputReader.SetIsTouchingInteractable(true);
+                return;
+            }
             m_touchInputReader.SetPrimaryFingerPreviousFramePosition(primaryFinger.screenPosition);
             
-            //Check if we under our first touch is an interactable object
-            Vector2 touchWorldPosition = m_gameCamera.ScreenToWorldPoint(primaryFinger.screenPosition);
-            RaycastHit2D hit = Physics2D.Raycast(touchWorldPosition, Vector2.zero);
-            if (hit.collider != null)
-            {
-                if (BubbleUpGameObjectsImplementsEventHandler(hit.collider.gameObject))
-                {
-                    m_selectedObject = hit.collider.gameObject;
-                    m_touchInputReader.SetIsTouchingInteractable(true);
-                }
-            }
+            // Vector2 touchWorldPosition = m_gameCamera.ScreenToWorldPoint(primaryFinger.screenPosition);
+            // RaycastHit2D hit = Physics2D.Raycast(touchWorldPosition, Vector2.zero);
+            // if (hit.collider != null)
+            // {
+            //     if (BubbleUpGameObjectsImplementsEventHandler(hit.collider.gameObject))
+            //     {
+            //         m_selectedObject = hit.collider.gameObject;
+            //         m_touchInputReader.SetIsTouchingInteractable(true);
+            //     }
+            // }
         }
         
         private void ProcessSecondaryFinger(Touch secondaryTouch)
         {
-            m_touchInputReader.SetSecondaryFingerPhase(secondaryTouch.phase);
-            if (secondaryTouch.phase == TouchPhase.Began)
+            if (!EventSystem.current.IsPointerOverGameObject(secondaryTouch.touchId))
             {
-                m_touchInputReader.SetSecondaryFingerPreviousFramePosition(secondaryTouch.screenPosition);
-            }
-            else if (secondaryTouch.phase == TouchPhase.Moved)
-            {
-                m_touchInputReader.SetSecondaryFingerPosition(secondaryTouch.screenPosition);
+                m_touchInputReader.SetSecondaryFingerPhase(secondaryTouch.phase);
+                if (secondaryTouch.phase == TouchPhase.Began)
+                {
+                    m_touchInputReader.SetSecondaryFingerPreviousFramePosition(secondaryTouch.screenPosition);
+                }
+                else if (secondaryTouch.phase == TouchPhase.Moved)
+                {
+                    m_touchInputReader.SetSecondaryFingerPosition(secondaryTouch.screenPosition);
+                }
             }
         }
 

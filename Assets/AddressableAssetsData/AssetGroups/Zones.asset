@@ -10,33 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Forest
+  m_Name: Zones
   m_EditorClassIdentifier: 
-  m_GroupName: Forest
+  m_GroupName: Zones
   m_Data:
     m_SerializedData: []
-  m_GUID: 46dc53096e9aa9e4bb3700329140a915
+  m_GUID: b18b9d8b6ceb21d43b9faf9e6b629365
   m_SerializeEntries:
-  - m_GUID: cba2541225a5e4c4890bb573499570f8
-    m_Address: Assets/Scenes/PlayableLevels/ForestArea
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Preload
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4a64a22c69e02b54e8c86d2bd938bf6e
-    m_Address: Assets/ScriptableObjects/SceneData/PlayableLevels/ForestLevels
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e0c873daed4073e42afbf29e976debb5
-    m_Address: Assets/Prefabs/Zones/BambooZone.prefab
+  - m_GUID: a6724cd096b146346a96c30cd9d45692
+    m_Address: Assets/ScriptableObjects/SceneData/PlayableLevels/ForestLevels/ForestZone.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - Zone
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f72570b8c0bc8d443b29643b85dc5114
+    m_Address: Assets/ScriptableObjects/SceneData/PlayableLevels/ForestLevels/ForestZone
+      1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Zone
+    - Preload
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 2b55d7077678371438df10d2689a1a3b, type: 2}
-    - {fileID: 11400000, guid: 1d06012fdbce0d040b8885777ad65818, type: 2}
+    - {fileID: 11400000, guid: 8b1b17853497a9b41a1c7df5813dc9b0, type: 2}
+    - {fileID: 11400000, guid: 01ff8ae742d42c34e8ba7bcf3a3b1d66, type: 2}

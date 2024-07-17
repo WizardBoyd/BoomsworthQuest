@@ -4,6 +4,7 @@ using Input;
 using SaveSystem;
 using UI.Properties;
 using UnityEngine;
+using UnityEngine.UI;
 using WizardUI;
 
 namespace UI.ScreenControllers
@@ -19,6 +20,11 @@ namespace UI.ScreenControllers
             public const string GameSettingWindow = "GameSettingWindow";
             public const string LanguageSettingWindow = "LanguageSettingWindow";
         }
+
+        [Header("Configuration")] 
+        [SerializeField]
+        private Vector2Int m_screenReferenceSize;
+        [SerializeField][Range(0f,1f)] private float m_uiScaleFactor = 1.0f;
         
         [Header("Settings")] 
         [SerializeField] private UISettings m_uiSettings = default;
@@ -38,6 +44,12 @@ namespace UI.ScreenControllers
         private void Awake()
         {
             m_uiFrame = new UISettings.UIFrameBuilder(m_uiSettings).SetInstanceAndRegister().Build();
+            if (m_uiFrame.TryGetComponent<CanvasScaler>(out CanvasScaler scaler))
+            {
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = m_screenReferenceSize;
+                scaler.matchWidthOrHeight = m_uiScaleFactor;
+            }
             ShowHideCorePanels(true);
         }
 
@@ -84,7 +96,10 @@ namespace UI.ScreenControllers
             }
         }
 
-        private void OpenSettingWindow() => m_uiFrame.OpenWindow<GameSettingsProperties>(LevelSelectionScreenIds.GameSettingWindow, new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
+        private void OpenSettingWindow()
+        {
+            //m_uiFrame.OpenWindow<GameSettingsProperties>(LevelSelectionScreenIds.GameSettingWindow, new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
+        } 
         
         private void OpenLanguageWindow() => m_uiFrame.OpenWindow(LevelSelectionScreenIds.LanguageSettingWindow);
         

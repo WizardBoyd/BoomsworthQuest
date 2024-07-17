@@ -47,8 +47,8 @@ namespace UI.PanelControllers
 
         private void ToggleSoundButtonPressed()
         {
-            Properties.PlayerSettingsData.SoundOn = !Properties.PlayerSettingsData.SoundOn;
-            m_SoundEffectBtn.OnToggle(Properties.PlayerSettingsData.SoundOn);
+            //Properties.PlayerSettingsData.SoundOn = !Properties.PlayerSettingsData.SoundOn;
+            //m_SoundEffectBtn.OnToggle(Properties.PlayerSettingsData.SoundOn);
         }
 
         private void PauseButtonPressed()
@@ -81,7 +81,7 @@ namespace UI.PanelControllers
 
         protected override void OnPropertiesSet()
         {
-            m_SoundEffectBtn.OnToggle(Properties.PlayerSettingsData.SoundOn);
+            //m_SoundEffectBtn.OnToggle(Properties.PlayerSettingsData.SoundOn);
         }
 
         protected override void WhileHiding()

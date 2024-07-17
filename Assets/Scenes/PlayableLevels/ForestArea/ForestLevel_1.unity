@@ -538,7 +538,7 @@ GameObject:
   - component: {fileID: 580102609}
   - component: {fileID: 580102608}
   - component: {fileID: 580102610}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WorldBounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8030,6 +8030,16 @@ Tilemap:
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
   - first: {x: -1, y: 0, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 23
+      m_TileSpriteIndex: 23
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741825
+  - first: {x: 0, y: 0, z: 0}
     second:
       serializedVersion: 2
       m_TileIndex: 23
@@ -26687,7 +26697,7 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: d01813c2e63e6d244b63e5ea67dad006, type: 2}
   - m_RefCount: 6
     m_Data: {fileID: 11400000, guid: f267243660884a54c81ab69d6d5870ef, type: 2}
-  - m_RefCount: 1599
+  - m_RefCount: 1600
     m_Data: {fileID: 11400000, guid: ed5382daab3d19f4f9d98d97304740d4, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -26736,10 +26746,10 @@ Tilemap:
     m_Data: {fileID: 1265991195, guid: 47cce03b107350b448d6501a19f113c6, type: 3}
   - m_RefCount: 6
     m_Data: {fileID: -1031508937, guid: 47cce03b107350b448d6501a19f113c6, type: 3}
-  - m_RefCount: 1599
+  - m_RefCount: 1600
     m_Data: {fileID: -3171911, guid: 47cce03b107350b448d6501a19f113c6, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 2072
+  - m_RefCount: 2073
     m_Data:
       e00: 1
       e01: 0
@@ -26758,7 +26768,7 @@ Tilemap:
       e32: 0
       e33: 1
   m_TileColorArray:
-  - m_RefCount: 2072
+  - m_RefCount: 2073
     m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1

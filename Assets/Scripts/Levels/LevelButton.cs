@@ -22,7 +22,7 @@ namespace Levels
 
         private Button button;
 
-        public LevelSO AssignedLevel
+        public LevelSceneSO AssignedLevel
         {
             get => m_assignedLevel;
             set
@@ -35,10 +35,10 @@ namespace Levels
                 UpdateButtonView();
             }
         }
-        private LevelSO m_assignedLevel;
+        private LevelSceneSO m_assignedLevel;
 
         [Header("Broadcasting On Event")] 
-        [SerializeField] private LevelLoadEventChannel On_LevelClicked;
+        [SerializeField] private LoadEventChannelSO On_LevelClicked;
 
         protected void Awake()
         {

@@ -6,7 +6,6 @@ using Events.ScriptableObjects;
 using Input;
 using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
-using SceneManagment.ScriptableObjects.Actions;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -170,23 +169,9 @@ namespace SceneManagment
                     StartCoroutine(UnloadPreviousScene());
             }
 
-            private IEnumerator PerformLeaveSceneActionsSequentially()
-            {
-                    foreach (BaseSceneChangeAction leaveSceneAction in m_currentlyLoadedScene.OnLeaveSceneActions)
-                    {
-                            leaveSceneAction.PerformAction();
-                            yield return new WaitForEndOfFrame();
-                    }
-            }
 
-            private IEnumerator PerformEnterSceneActionsSequentially()
-            {
-                    foreach (BaseSceneChangeAction leaveSceneAction in m_currentlyLoadedScene.OnEnterSceneActions)
-                    {
-                            leaveSceneAction.PerformAction();
-                            yield return new WaitForEndOfFrame();
-                    }
-            }
+
+           
 
             private IEnumerator UnloadPreviousScene()
             {
@@ -203,7 +188,6 @@ namespace SceneManagment
                     //would be null if the game was started in Initialisation 
                     if (m_currentlyLoadedScene != null)
                     {
-                            yield return PerformEnterSceneActionsSequentially();
                             //TODO for saving retain a list of pertinent objects then on the monobehavior of destory just save
                             if (m_currentlyLoadedScene.SceneReference.OperationHandle.IsValid())
                             {
@@ -244,18 +228,25 @@ namespace SceneManagment
             {
                     m_loadingOperationHandle =
                             m_sceneToLoad.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true, 0);
-                    m_loadingOperationHandle.Completed += handle => { StartCoroutine(OnNewSceneLoaded(handle));} ;
+                    m_loadingOperationHandle.Completed += OnNewSceneLoaded;
+                    SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
             }
 
-            private IEnumerator OnNewSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
+            private void SceneManagerOnsceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+            {
+                    SceneManager.sceneLoaded -= SceneManagerOnsceneLoaded;
+                    //Inject Dependencies
+                    //Injection of the dependencies here ensures that the dependencies
+                    //should be available before any start method is called according to the documentation
+                    Injector.Instance.PerformInjection();
+            }
+
+            private void OnNewSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
             {
                     m_currentlyLoadedScene = m_sceneToLoad;
                     Scene scene = obj.Result.Scene;
                     SceneManager.SetActiveScene(scene);
-                    //Inject Dependencies
-                    Injector.Instance.PerformInjection();
                     m_touchInputReader.SetIsAppCurrentlyInteractable(true);
-                    yield return PerformEnterSceneActionsSequentially();
                     //We are no longer loading at this point
                     m_isLoading = false;
                     

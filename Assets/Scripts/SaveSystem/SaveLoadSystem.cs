@@ -1,92 +1,89 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using DependencyInjection;
+using DependencyInjection.attributes;
 using Events.ScriptableObjects;
+using Misc.FileManagment;
 using Misc.Singelton;
-using SaveSystem.SaveData;
 using UnityEngine;
 using WizardSave;
+using WizardSave.ObjectSerializers;
+using WizardSave.Utils;
 
 namespace SaveSystem
 {
-    public class SaveLoadSystem : MonoBehaviorSingleton<SaveLoadSystem>
+    public class SaveLoadSystem : MonoBehaviorSingleton<SaveLoadSystem>, IDependencyProvider
     {
-        public const string ApplicationStatusName = "AppStatus";
-        public const string PlayerSettingDataName = "DefaultPlayerSettings";
-        public const string GameProgressDataName = "DefaultGameProgress";
-        public const string PlayerResourceDataName = "DefaultResourceData";
+        private DictionaryKeyValueStore m_applicationStatus;
         
-        [field: SerializeField]
-        public PlayerSettingsData PlayerSettingData { get; private set; }
-        [field: SerializeField]
-        public GameProgressData GameProgressData { get; private set; }
-        [field: SerializeField]
-        public PlayerResourceData PlayerResourceData { get; private set; }
-        
-        [field: SerializeField]
-        public ApplicationStatus ApplicationStatus { get; private set; }
+        #region Dependency Injection
 
-        [Header("Listening On")] 
-        [SerializeField]
-        private VoidEventChannelSO m_savePlayerSettingsChannel = default;
-        [SerializeField]
-        private VoidEventChannelSO m_saveGameProgressChannel = default;
-        [SerializeField]
-        private VoidEventChannelSO m_savePlayerResourcesChannel = default;
+        [Provide]
+        private AutoSaveKeyValueStoreWrapper ProvideSaveContainer()
+        {
+            return new AutoSaveKeyValueStoreWrapper(m_applicationStatus);
+        }
         
+        [Provide]
+        private ObjectSerializerMap ProvideObjectSerializerMap()
+        {
+            ObjectSerializerMap objectSerializerMap = new ObjectSerializerMap();
+            objectSerializerMap.DefaultSerializer = new NewtonsoftJsonTextSerializer();
+            IDictionary<Type, IObjectSerializer> objectSerializers = new Dictionary<Type, IObjectSerializer>();
+            AddTypes(ref objectSerializers);
+            objectSerializerMap.TypeToSerializeMap = objectSerializers;
+            return objectSerializerMap;
+        }
+        #endregion
         
-        protected IDataService m_dataService;
-
+        #region Initialization
         protected override void Awake()
-        {
+        { 
             base.Awake();
-            m_dataService = new FileDataService<string, JsonDataReadWriter>.
-                    FileDataServiceBuilder<string, JsonDataReadWriter>()
-                .WithSerializer(new JsonSerializer(Encoding.UTF8, true))
-                .WithFileExtension("data")
-                .WithDataPath(Application.persistentDataPath)
-                .Build();
-          
-                //Load all the default files
+            m_applicationStatus = new DictionaryKeyValueStore()
+            {
+                FilePath = Path.Combine(Application.persistentDataPath, "ApplicationStatus.json")
+            };
+            bool isApplicationStatusNew = LoadOrCreatePersistentData(m_applicationStatus) == 1;
+            if(isApplicationStatusNew){
+                m_applicationStatus.SetBool("FirstTime", true);
+                
+            }
+            else
+            {
+                m_applicationStatus.SetBool("FirstTime", false);
+            }
         }
 
-        private void OnEnable()
+        private int LoadOrCreatePersistentData(AStreamSavableFile savableKeyValueStore)
         {
-            m_saveGameProgressChannel.OnEventRaised += SaveGameProgress;
-            m_savePlayerSettingsChannel.OnEventRaised += SavePlayerSettings;
-            m_savePlayerResourcesChannel.OnEventRaised += SaveResourceData;
+            if(FileManager.FileExists(savableKeyValueStore.FilePath))
+            {
+                savableKeyValueStore.Load();
+                return -1;
+            }
+            else
+            {
+                savableKeyValueStore.Save();
+                return 1;
+            }
         }
         
-        private void OnDisable()
+        private void AddTypes(ref IDictionary<Type, IObjectSerializer> serializers)
         {
-            m_saveGameProgressChannel.OnEventRaised -= SaveGameProgress;
-            m_savePlayerSettingsChannel.OnEventRaised -= SavePlayerSettings;
-            m_savePlayerResourcesChannel.OnEventRaised -= SaveResourceData;
+            UnityMathTextSerializer mathSerializer = new UnityMathTextSerializer();
+            serializers.Add(typeof(Vector2),mathSerializer);
+            serializers.Add(typeof(Vector2Int),mathSerializer);
         }
 
-        private void SavePlayerSettings() => m_dataService.Save(PlayerSettingData);
-        public void LoadPlayerSettings(string settingName) => PlayerSettingData = m_dataService.Load<PlayerSettingsData>(settingName);
-        
-        private void SaveResourceData() => m_dataService.Save(PlayerResourceData);
-        public void LoadResourceData(string settingName) => PlayerResourceData = m_dataService.Load<PlayerResourceData>(settingName);
-        
-        private void SaveGameProgress() => m_dataService.Save(GameProgressData);
-        public void LoadGameProgress(string settingName) => GameProgressData = m_dataService.Load<GameProgressData>(settingName);
-        
-        private void SaveAppData() => m_dataService.Save(ApplicationStatus);
-        public void LoadAppData(string settingName) => ApplicationStatus = m_dataService.Load<ApplicationStatus>(settingName);
-        
-        public void DeleteFile(string fileName) => m_dataService.Delete(fileName);
+        #endregion
 
         private void OnDestroy()
         {
-            //The first time should always be off after a destory
-            ApplicationStatus.FirstLaunch = false;
-            m_dataService.Save(ApplicationStatus);
-            
-            m_dataService.Save(PlayerSettingData);
-            m_dataService.Save(PlayerResourceData);
-            m_dataService.Save(GameProgressData);
+            m_applicationStatus.Save();
         }
         
     }

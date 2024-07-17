@@ -36,8 +36,8 @@ namespace UI.WindowController
 
         protected override void OnPropertiesSet()
         {
-            m_SoundButton.OnToggle( Properties.PlayerSettingsData.SoundOn);
-            m_SFXButton.OnToggle(Properties.PlayerSettingsData.SFXOn);
+           // m_SoundButton.OnToggle( Properties.PlayerSettingsData.SoundOn);
+           // m_SFXButton.OnToggle(Properties.PlayerSettingsData.SFXOn);
         }
 
         protected override void WhileHiding()
@@ -48,14 +48,14 @@ namespace UI.WindowController
         
         private void ToggleSound()
         {
-            Properties.PlayerSettingsData.SoundOn = !Properties.PlayerSettingsData.SoundOn;
-            m_SoundButton.OnToggle(Properties.PlayerSettingsData.SoundOn);
+            //Properties.PlayerSettingsData.SoundOn = !Properties.PlayerSettingsData.SoundOn;
+//m_SoundButton.OnToggle(Properties.PlayerSettingsData.SoundOn);
         }
         
         private void ToggleSFX()
         {
-            Properties.PlayerSettingsData.SFXOn = !Properties.PlayerSettingsData.SFXOn;
-            m_SFXButton.OnToggle(Properties.PlayerSettingsData.SFXOn);
+            //Properties.PlayerSettingsData.SFXOn = !Properties.PlayerSettingsData.SFXOn;
+           // m_SFXButton.OnToggle(Properties.PlayerSettingsData.SFXOn);
         }
 
     }

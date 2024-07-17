@@ -23,7 +23,12 @@ namespace DependencyInjection
         static MonoBehaviour[] findMonoBehaviors() {
             return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
         }
-        
+
+        private void Start()
+        {
+            PerformInjection();
+        }
+
         public void PerformInjection()
         {
             var provides = findMonoBehaviors().OfType<IDependencyProvider>();
@@ -37,6 +42,12 @@ namespace DependencyInjection
             {
                 Inject(injectable);
             }
+        }
+
+        public void PerformInjection(MonoBehaviour injectable)
+        {
+            Debug.Assert(IsInjectable(injectable), $"Object {injectable.name} is not Injectable");
+            Inject(injectable);
         }
 
         private void Inject(object injectable)
@@ -55,7 +66,7 @@ namespace DependencyInjection
                 }
                 injectableField.SetValue(injectable, resolvedInstance);
 #if UNITY_EDITOR
-                Debug.Log($"Field Injected {fieldType.Name} into {type.Name}");
+                //Debug.Log($"Field Injected {fieldType.Name} into {type.Name}");
 #endif
             }
 
@@ -97,9 +108,9 @@ namespace DependencyInjection
                 var providedInstance = method.Invoke(provider, null);
                 if (providedInstance != null)
                 {
-                    m_registry.Add(returnType, providedInstance);
+                    m_registry.TryAdd(returnType, providedInstance);
 #if UNITY_EDITOR
-                Debug.Log($"Registered {returnType.Name} from {provider.GetType().Name}");    
+                //Debug.Log($"Registered {returnType.Name} from {provider.GetType().Name}");    
 #endif
                 }
                 else

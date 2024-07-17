@@ -324,16 +324,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc46425e6d848be97f7c675a84b1a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model:
-    level: {fileID: 0}
-    LevelState: 0
-    StarCount: -1
   LeftStar: {fileID: 4627076485402987508}
   MiddleStar: {fileID: 2980947184770539747}
   RightStar: {fileID: 5303426185180463464}
   Lock: {fileID: 7154276861133122630}
   numberText: {fileID: 707458896869066800}
-  On_LevelClicked: {fileID: 11400000, guid: 9f72de4a828da754f8c4acb904543064, type: 2}
+  On_LevelClicked: {fileID: 11400000, guid: 052cd3935448df54abe0cdbadb147f61, type: 2}
 --- !u!1 &6222728240159239400
 GameObject:
   m_ObjectHideFlags: 0
