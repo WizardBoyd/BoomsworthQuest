@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48369598e90449ce9b3fa0b2b6768d1f, type: 3}
+  m_Name: ForestLevel_8
+  m_EditorClassIdentifier: 
+  SceneType: 3
+  SceneReference:
+    m_AssetGUID: 52ccee8f75b73f54e96559d5417791a8
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  m_levelIndex: 7
+  m_belongingZone: {fileID: 11400000, guid: a6724cd096b146346a96c30cd9d45692, type: 2}

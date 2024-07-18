@@ -41,10 +41,10 @@ namespace EditorTools.MonoBehaviours
 
         private void LoadEventChannel(AsyncOperationHandle<SceneInstance> obj)
         {
-            m_notifyColdStartupChannel.LoadAssetAsync<LoadEventChannelSO>().Completed += OnNotifyChannelLoaded;
+            m_notifyColdStartupChannel.LoadAssetAsync<LoadSceneEventChannelSO>().Completed += OnNotifyChannelLoaded;
         }
 
-        private void OnNotifyChannelLoaded(AsyncOperationHandle<LoadEventChannelSO> obj)
+        private void OnNotifyChannelLoaded(AsyncOperationHandle<LoadSceneEventChannelSO> obj)
         {
             if (m_thisSceneSO != null)
             {

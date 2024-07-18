@@ -94,10 +94,9 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-    - Preload
     - Locale
     - Zone
-    - LevelSelection
+    - Level
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 57329e78dd97e204ab6abf9df540ab02, type: 2}

@@ -1,15 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AssetManagment;
-using AssetManagment.ConcreteReferences;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Factory;
 using Levels.ScriptableObjects;
+using Levels.SerializableData;
 using Misc.Singelton;
 using Mkey;
 using SaveSystem;
@@ -24,11 +20,14 @@ namespace Levels
     [RequireComponent(typeof(RectTransform))]
     public class MapController : MonoBehaviorSingleton<MapController>
     {
-        private AsyncOperationHandle<IList<ZoneSO>> m_operationHandle;
-        
-        private List<ZoneSO> m_preloadedZones;
-        
-        private List<ZoneRuntime> m_runtimeZones;
+        private List<SerializedZone> SerializedZones
+        {
+            get => LevelDataPersistencyManager.Instance.m_serializedZones;
+        }
+        private Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone
+        {
+            get => LevelDataPersistencyManager.Instance.m_zoneToSerializedZone;
+        }
         
         [Header("Pool Helper")]
         [SerializeField]
@@ -42,75 +41,47 @@ namespace Levels
         [SerializeField]
         private VoidEventChannelSO m_OnLevelReadyEvent;
         
-        [Inject]
-        private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
+        private List<RectTransform> m_zones = new List<RectTransform>();
 
         protected override void Awake()
         {
             base.Awake();
+            InstantiateRuntimeZones();
         }
         
-        private IEnumerator Start()
-        {
-            if(m_autoSaveKeyValueStoreWrapper == null)
-                throw new ArgumentNullException(nameof(m_autoSaveKeyValueStoreWrapper));
-            m_operationHandle = Addressables.LoadAssetsAsync<ZoneSO>("Zone", null, true);
-            if (!m_operationHandle.IsDone)
-                yield return m_operationHandle;
-            if (m_operationHandle.Status == AsyncOperationStatus.Succeeded)
-            {
-                m_preloadedZones = new List<ZoneSO>(m_operationHandle.Result);
-                InstantiateRuntimeZones();
-            }
-        }
-
-        private void OnEnable()
-        {
-            //m_OnLevelReadyEvent.OnEventRaised += InstantiateRuntimeZones;
-        }
-
-        private void OnDisable()
-        {
-            //m_OnLevelReadyEvent.OnEventRaised -= InstantiateRuntimeZones;
-        }
-
-        private void OnDestroy()
-        {
-            if (m_operationHandle.IsValid())
-            {
-                Addressables.Release(m_operationHandle);
-            }
-        }
-
         private void InstantiateRuntimeZones()
         {
-            m_runtimeZones = new List<ZoneRuntime>(m_preloadedZones.Count);
-            foreach (ZoneSO preloadedZone in m_preloadedZones)
+            foreach (var (zoneSo, serializedZone) in m_zoneToSerializedZone)
             {
-                ZoneRuntime zoneRuntime = Instantiate(preloadedZone.ZonePrefab);
-                if (zoneRuntime.TryGetComponent<RectTransform>(out RectTransform rectTransform))
-                {
-                    //Set the size of the zone
-                    rectTransform.sizeDelta = m_zoneResolutionSize;
-                }
-                zoneRuntime.transform.SetParent(transform);
-                SpawnLevelButtonsForZone(zoneRuntime, preloadedZone);
+                var zone = CreateZoneTemplate(zoneSo);
+                SpawnLevelButtonsForZone(zone, zoneSo);
             }
         }
-        
-        private void SpawnLevelButtonsForZone(ZoneRuntime zoneRuntime, ZoneSO zoneSo)
+
+        private GameObject CreateZoneTemplate(ZoneSO zoneSo)
         {
-            SceneCurve sceneCurve;
-            if(!zoneRuntime.TryGetComponent<SceneCurve>(out sceneCurve))
-                return;
-            List<LevelButton> buttons = new List<LevelButton>(m_buttonPool.Request(zoneSo.m_levelsInZone.Count));
-            List<Vector3> positions = sceneCurve.Curve.GetPositions(buttons.Count);
-            for(int i = 0 ; i < buttons.Count; i++)
+            GameObject zone = new GameObject(
+                zoneSo.name + "_Runtime", typeof(RectTransform));
+            RectTransform zoneTransform = zone.GetComponent<RectTransform>();
+            Image image = zone.AddComponent<Image>();
+            image.sprite = zoneSo.ZoneCurveLayout.ZoneImage;
+            //Set the size of the rect transform
+            zoneTransform.sizeDelta = new Vector2(m_zoneResolutionSize.x, m_zoneResolutionSize.y);
+            //Add it as a child
+            zoneTransform.SetParent(transform);
+            return zone;
+        }
+
+        private void SpawnLevelButtonsForZone(GameObject zoneTemplate, ZoneSO zoneSo)
+        {
+            var post = zoneSo.ZoneCurveLayout.Curve.GetPositions(zoneSo.Levels.Length);
+            for (int i = 0; i < zoneSo.Levels.Length; i++)
             {
-                buttons[i].AssignedLevel = zoneSo.m_levelsInZone[i];
-                buttons[i].transform.localScale = zoneRuntime.transform.lossyScale;
-                buttons[i].transform.SetParent(zoneRuntime.transform);
-                buttons[i].transform.position = zoneRuntime.transform.TransformPoint(positions[i]);
+                var levelButton = m_buttonPool.Request();
+                levelButton.transform.SetParent(zoneTemplate.transform);
+                levelButton.transform.position = zoneTemplate.transform.TransformPoint(post[i]);
+                levelButton.AssignedLevel = m_zoneToSerializedZone[zoneSo].Levels[i];
+                levelButton.LevelSceneSo = zoneSo.Levels[i];
             }
         }
         

@@ -17,12 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 46dc53096e9aa9e4bb3700329140a915
   m_SerializeEntries:
-  - m_GUID: cba2541225a5e4c4890bb573499570f8
-    m_Address: Assets/Scenes/PlayableLevels/ForestArea
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Preload
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4a64a22c69e02b54e8c86d2bd938bf6e
     m_Address: Assets/ScriptableObjects/SceneData/PlayableLevels/ForestLevels
     m_ReadOnly: 0
@@ -31,8 +25,7 @@ MonoBehaviour:
   - m_GUID: e0c873daed4073e42afbf29e976debb5
     m_Address: Assets/Prefabs/Zones/BambooZone.prefab
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Zone
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}

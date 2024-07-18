@@ -35,14 +35,12 @@ MonoBehaviour:
   - m_GUID: bf7c2e9bd4a13db48acd6e945953928a
     m_Address: Assets/Scenes/PersistentManagerScene.unity
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Preload
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 86fa01ca7771e674db8589869df64974
     m_Address: Assets/Scenes/GameplayManagerScene.unity
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Preload
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}

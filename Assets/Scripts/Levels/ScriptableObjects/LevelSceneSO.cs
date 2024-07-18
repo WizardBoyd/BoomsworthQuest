@@ -16,6 +16,13 @@ namespace Levels.ScriptableObjects
             get => m_levelIndex;
         }
 
+        [SerializeField] 
+        private ZoneSO m_belongingZone;
+        public ZoneSO BelongingZone
+        {
+            get => m_belongingZone;
+        }
+
         public bool LevelLocked { get; set; } = false;
         
         public LevelCompletionStatus LevelCompletionStatus { get; set; }

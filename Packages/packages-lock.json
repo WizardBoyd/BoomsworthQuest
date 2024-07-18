@@ -478,7 +478,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "0175e739452699a21dd9e870d71fb418f779c2a8"
+      "hash": "ebb5fef2ea431e9a06dd92d011ae96580e5c000c"
     },
     "com.wizboyd.wizardui": {
       "version": "https://github.com/WizardBoyd/WizardUI.git",

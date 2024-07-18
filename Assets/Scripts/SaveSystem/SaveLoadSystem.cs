@@ -6,6 +6,7 @@ using System.Text;
 using DependencyInjection;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
+using Levels.SerializableData;
 using Misc.FileManagment;
 using Misc.Singelton;
 using UnityEngine;
@@ -75,8 +76,10 @@ namespace SaveSystem
         private void AddTypes(ref IDictionary<Type, IObjectSerializer> serializers)
         {
             UnityMathTextSerializer mathSerializer = new UnityMathTextSerializer();
+            NewtonsoftJsonTextSerializer jsonSerializer = new NewtonsoftJsonTextSerializer();
             serializers.Add(typeof(Vector2),mathSerializer);
             serializers.Add(typeof(Vector2Int),mathSerializer);
+            serializers.Add(typeof(List<SerializedZone>), jsonSerializer);
         }
 
         #endregion

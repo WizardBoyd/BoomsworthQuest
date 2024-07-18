@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Levels.ScriptableObjects;
+using UnityEditor;
 using UnityEngine;
 
 namespace Mkey
@@ -147,6 +148,24 @@ namespace Mkey
                 {
                     curve.SetInitial();
                 }
+                
+                if (GUILayout.Button("SerializeCurve"))
+                {
+                    SerializeCurve(curve);
+                }
+            }
+        }
+        
+        private void SerializeCurve(SceneCurve curve)
+        {
+            string path = EditorUtility.SaveFilePanel("Save Zone Curve Layout", Application.dataPath, "NewZoneCurve","asset");
+            if (path.Length != 0)
+            {
+                path = FileUtil.GetProjectRelativePath(path);
+                ZoneCurveLayoutSO asset = ScriptableObject.CreateInstance<ZoneCurveLayoutSO>();
+                asset.Curve = curve.Curve;
+                AssetDatabase.CreateAsset(asset, path);
+                AssetDatabase.SaveAssets();
             }
         }
 

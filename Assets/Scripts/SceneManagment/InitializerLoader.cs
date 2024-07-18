@@ -19,7 +19,7 @@ public class InitializerLoader : MonoBehaviour
     [SerializeField] private GameSceneSO _MainGameSceneToLoad = default;
 
     [Header("Broadcasting On")]
-    [SerializeField] private AssetReferenceT<LoadEventChannelSO> m_menuLoadChannel = null;
+    [SerializeField] private AssetReferenceT<LoadSceneEventChannelSO> m_menuLoadChannel = null;
     
     private void Start()
     {
@@ -29,10 +29,10 @@ public class InitializerLoader : MonoBehaviour
 
     private void On_PersistentManagerSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
     {
-        m_menuLoadChannel.LoadAssetAsync<LoadEventChannelSO>().Completed += LoadMainGameScene;
+        m_menuLoadChannel.LoadAssetAsync<LoadSceneEventChannelSO>().Completed += LoadMainGameScene;
     }
 
-    private void LoadMainGameScene(AsyncOperationHandle<LoadEventChannelSO> obj)
+    private void LoadMainGameScene(AsyncOperationHandle<LoadSceneEventChannelSO> obj)
     {
         obj.Result.RaiseEvent(_MainGameSceneToLoad, true);
         SceneManager.UnloadSceneAsync(0);

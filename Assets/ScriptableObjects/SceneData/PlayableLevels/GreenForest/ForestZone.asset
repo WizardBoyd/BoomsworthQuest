@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4a9774bea0245939c0ee1abcffacb9c, type: 3}
+  m_Name: ForestZone
+  m_EditorClassIdentifier: 
+  ZoneIndex: 0
+  Levels:
+  - {fileID: 11400000, guid: 66a0d55064b5bee4893155ed511fe051, type: 2}
+  - {fileID: 11400000, guid: 34fbf465a5256b947b958bbe04fe69b6, type: 2}
+  - {fileID: 11400000, guid: 8c305276490356a40ba3ff6e894ac797, type: 2}
+  - {fileID: 11400000, guid: ed8c1702d658dab4a9de1e7881e75d40, type: 2}
+  - {fileID: 11400000, guid: 8fdeaa356e27a6f48928685850501476, type: 2}
+  - {fileID: 11400000, guid: 9ad3c85160c1a824688059d23d2b017e, type: 2}
+  - {fileID: 11400000, guid: df6600008c8917548b9a206f8110644c, type: 2}
+  - {fileID: 11400000, guid: 208039aa9ec90df468ee0e1f26e422cb, type: 2}
+  - {fileID: 11400000, guid: 790ade46f1f537d498333c8c59ffeff4, type: 2}
+  - {fileID: 11400000, guid: 25761dd0710dcb54ab2606129e575b9c, type: 2}
+  ZoneCurveLayout: {fileID: 11400000, guid: 6408fd50d3d518f4baf2f28902215640, type: 2}

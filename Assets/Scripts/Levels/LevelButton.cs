@@ -3,6 +3,7 @@ using BaseClasses;
 using Events.ScriptableObjects;
 using Levels.Enums;
 using Levels.ScriptableObjects;
+using Levels.SerializableData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +23,7 @@ namespace Levels
 
         private Button button;
 
-        public LevelSceneSO AssignedLevel
+        public SerializedLevel AssignedLevel
         {
             get => m_assignedLevel;
             set
@@ -35,10 +36,12 @@ namespace Levels
                 UpdateButtonView();
             }
         }
-        private LevelSceneSO m_assignedLevel;
+        private SerializedLevel m_assignedLevel;
+
+        public LevelSceneSO LevelSceneSo;
 
         [Header("Broadcasting On Event")] 
-        [SerializeField] private LoadEventChannelSO On_LevelClicked;
+        [SerializeField] private LoadLevelEventChannelSO On_LevelClicked;
 
         protected void Awake()
         {
@@ -58,7 +61,7 @@ namespace Levels
         private void UpdateButtonView()
         {
             UpdateStarView();
-            if (AssignedLevel.LevelLocked)
+            if (AssignedLevel.CurrentlyLocked)
             {
                 Lock.gameObject.SetActive(true);
                 button.interactable = false;
@@ -79,14 +82,13 @@ namespace Levels
             MiddleStar.gameObject.SetActive(false);
             RightStar.gameObject.SetActive(false);
             
-            if (AssignedLevel.LevelCompletionStatus == LevelCompletionStatus.Unkown)
+            if (AssignedLevel.CompletionStatus == LevelCompletionStatus.Unkown)
             {
-               
                 return;
             }
             else
             {
-                switch (m_assignedLevel.LevelCompletionStatus)
+                switch (m_assignedLevel.CompletionStatus)
                 {
                     case LevelCompletionStatus.OneStarCompletion:
                         LeftStar.gameObject.SetActive(true);
@@ -106,7 +108,7 @@ namespace Levels
 
         private void On_ButtonClicked()
         {
-            On_LevelClicked.RaiseEvent(AssignedLevel);
+            On_LevelClicked.RaiseEvent(LevelSceneSo);
         }
     }
 }

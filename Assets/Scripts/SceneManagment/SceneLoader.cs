@@ -24,12 +24,12 @@ namespace SceneManagment
             
         [Header("Listening To")]
         //Channel to listen to for loading gameplay levels
-        [SerializeField] private LoadEventChannelSO m_LoadLevel = default;
+        [SerializeField] private LoadLevelEventChannelSO m_LoadLevel = default;
         //Channel to listen to for loading the main level selection screen or other menu based scenes
-        [SerializeField] private LoadEventChannelSO m_LoadMenu = default;
+        [SerializeField] private LoadSceneEventChannelSO m_LoadMenu = default;
 #if UNITY_EDITOR
         //Channel to listen to if in editor play mode we don't start with the bootstrapper scene (initialization scene)
-        [SerializeField] private LoadEventChannelSO m_coldStartupLocation = default;
+        [SerializeField] private LoadSceneEventChannelSO m_coldStartupLocation = default;
 #endif
         
         [Header("Broadcasting On")]
