@@ -42,6 +42,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d1a958b1171813e4e96df4ba95954330
+    m_Address: Assets/ScriptableObjects/EventChannels/SceneManagement/LoadSceneEventChannel.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 58ce2ff1d84ae9b42a6b4a0bceae1b5e
+    m_Address: Assets/ScriptableObjects/EventChannels/SceneManagement/LoadLevelEventChannel.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65354d8f8a8e0524aa18afff7f2134f5
+    m_Address: Assets/ScriptableObjects/EventChannels/SceneManagement/ColdStartUpChannel.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}
   m_SchemaSet:

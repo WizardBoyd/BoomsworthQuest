@@ -36,6 +36,7 @@ namespace Levels
         private SerializedCurrentLevelProgression m_serializedCurrentLevelProgression;
         
         [Header("Listening On")]
+        [SerializeField]
         private LoadLevelEventChannelSO m_onLevelStartPlayEvent;
         private VoidEventChannelSO m_onLevelCompleteEvent;
         

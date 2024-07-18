@@ -170,7 +170,7 @@ MonoBehaviour:
   _PersistentManagerScene: {fileID: 11400000, guid: e5edda3a9bac4b245a0ee3435420e667, type: 2}
   _MainGameSceneToLoad: {fileID: 11400000, guid: d28c4de89a54cdc4bb234a08cb458e37, type: 2}
   m_menuLoadChannel:
-    m_AssetGUID: 7a9a76a450a7830459b087744dbce36b
+    m_AssetGUID: d1a958b1171813e4e96df4ba95954330
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

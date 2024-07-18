@@ -168,9 +168,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gameplayScene: {fileID: 11400000, guid: 120f224772c407141a6998daabeed44c, type: 2}
-  m_LoadLevel: {fileID: 11400000, guid: 052cd3935448df54abe0cdbadb147f61, type: 2}
-  m_LoadMenu: {fileID: 11400000, guid: 7a9a76a450a7830459b087744dbce36b, type: 2}
-  m_coldStartupLocation: {fileID: 11400000, guid: 59fb232a1d1919e4f98ec5dea440fe2d, type: 2}
+  m_LoadLevel: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
+  m_LoadMenu: {fileID: 11400000, guid: d1a958b1171813e4e96df4ba95954330, type: 2}
+  m_coldStartupLocation: {fileID: 11400000, guid: 65354d8f8a8e0524aa18afff7f2134f5, type: 2}
   m_toggleLoadingScreen: {fileID: 11400000, guid: d4f1df3c6f9db6242b9524cd1f66c4cb, type: 2}
   m_SceneReadyChannel: {fileID: 11400000, guid: 4ee2b98d18d1d204288ef11ee32488e6, type: 2}
   m_FadeRequestChannel: {fileID: 11400000, guid: 02ab23515fb4d7143899193292fccdcc, type: 2}
@@ -1146,6 +1146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27033fc80ab44425a7ef3504184c9736, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_onLevelStartPlayEvent: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

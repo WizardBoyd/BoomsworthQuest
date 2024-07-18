@@ -646,10 +646,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175b26fab4e64a4f8bf41af3d939ebbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_thisSceneSO: {fileID: 11400000, guid: ef8e4570eeb9bb7419b4764ef5c26bac, type: 2}
+  m_thisSceneSO: {fileID: 11400000, guid: fde2678136ec3fb47ad944577603d95b, type: 2}
   m_PersistenManagerSO: {fileID: 11400000, guid: e5edda3a9bac4b245a0ee3435420e667, type: 2}
   m_notifyColdStartupChannel:
-    m_AssetGUID: 59fb232a1d1919e4f98ec5dea440fe2d
+    m_AssetGUID: 65354d8f8a8e0524aa18afff7f2134f5
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

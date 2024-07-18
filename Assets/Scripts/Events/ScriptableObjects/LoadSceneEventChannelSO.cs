@@ -28,7 +28,5 @@ namespace Events.ScriptableObjects
     [CreateAssetMenu(menuName = "Events/Load Scene Event Channel")]
     public class LoadSceneEventChannelSO : LoadSceneEventChannelSO<GameSceneSO>{}
     
-    [CreateAssetMenu(menuName = "Events/Load Level Event Channel")]
-    public class LoadLevelEventChannelSO : LoadSceneEventChannelSO<LevelSceneSO>{}
     
 }
