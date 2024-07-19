@@ -329,7 +329,8 @@ MonoBehaviour:
   RightStar: {fileID: 5303426185180463464}
   Lock: {fileID: 7154276861133122630}
   numberText: {fileID: 707458896869066800}
-  On_LevelClicked: {fileID: 11400000, guid: 052cd3935448df54abe0cdbadb147f61, type: 2}
+  LevelSceneSo: {fileID: 0}
+  On_LevelClicked: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
 --- !u!1 &6222728240159239400
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,8 @@ namespace Levels
         [Header("Listening On")]
         [SerializeField]
         private LoadLevelEventChannelSO m_onLevelStartPlayEvent;
-        private VoidEventChannelSO m_onLevelCompleteEvent;
+        [SerializeField]
+        private LevelCompletionEventChannelSO m_onLevelCompleteEvent;
         
         public List<SerializedZone> m_serializedZones { get; private set; } = new List<SerializedZone>();
         public Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone { get; private set;} = new Dictionary<ZoneSO, SerializedZone>();
@@ -57,6 +58,13 @@ namespace Levels
         private void OnEnable()
         {
             m_onLevelStartPlayEvent.OnLoadingRequested += OnLevelStartPlay;
+            m_onLevelCompleteEvent.OnEventRaised += OnLevelComplete;
+        }
+
+        private void OnDisable()
+        {
+            m_onLevelStartPlayEvent.OnLoadingRequested -= OnLevelStartPlay;
+            m_onLevelCompleteEvent.OnEventRaised -= OnLevelComplete;
         }
 
         private IEnumerator Start()
@@ -143,6 +151,9 @@ namespace Levels
         private IEnumerator LoadLevelData()
         {
             m_levelDataStore.Load();
+            m_serializedCurrentLevelProgression =
+                m_levelDataStore.GetObject<SerializedCurrentLevelProgression>("CurrentLevelProgression",
+                    m_serializedCurrentLevelProgression);
             yield return LoadSerializedLevelIntoList();
             IList<IResourceLocation> resourceLocationsNotInSave = new List<IResourceLocation>();
             GetResourceLocationsNotInSave(out resourceLocationsNotInSave);
@@ -195,6 +206,7 @@ namespace Levels
         {
             SerializedZone zone = m_zoneToSerializedZone[m_currentPlayingLevelSceneSo.BelongingZone];
             SerializedLevel level = zone.Levels.FirstOrDefault(x => x.LevelIndex == m_currentPlayingLevelSceneSo.LevelIndex);
+            m_currentPlayingLevelSceneSo = null;
             if(level == null)
                 return;
             level.CompletionStatus = levelCompletionStatus;
@@ -212,6 +224,8 @@ namespace Levels
                         return;
                     }
                     //Set the level to unlocked
+                    if(zone.Levels.Length <= 0)
+                        return;
                     level = zone.Levels[0];
                     level.CurrentlyLocked = false;
                     m_serializedCurrentLevelProgression.CurrentZoneIndex = zone.ZoneIndex;
@@ -229,12 +243,8 @@ namespace Levels
                     m_serializedCurrentLevelProgression);
             }
             m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
-            m_currentPlayingLevelSceneSo = null;
-        }
-
-        private void OnLevelSurrenderOrFail()
-        {
-            m_currentPlayingLevelSceneSo = null;
+            //TODO uncomment the save
+            m_levelDataStore.Save();
         }
         
         private bool IsLevelLastInZone(SerializedZone zone, SerializedLevel level)

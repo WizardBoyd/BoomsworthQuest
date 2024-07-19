@@ -11,12 +11,7 @@ namespace UI.Widgets
         [SerializeField] private GameObject m_SwitchOnState;
         [SerializeField] private GameObject m_SwitchOffState;
         
-        public Button Button { get; private set; }
-
-        private void Awake()
-        {
-            Button = GetComponent<Button>();
-        }
+        public Button Button { get => GetComponent<Button>(); }
 
         public void OnToggle(bool toggleState)
         {

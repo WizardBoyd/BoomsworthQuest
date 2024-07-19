@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 8296669994523711151}
   - component: {fileID: 6308918049648693439}
   - component: {fileID: 3177985641724366104}
-  - component: {fileID: 4993898857763212595}
+  - component: {fileID: 4262149600657848204}
   m_Layer: 5
   m_Name: BackToLevelSelection
   m_TagString: Untagged
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4993898857763212595
+--- !u!114 &4262149600657848204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2791804685748314381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: de79f5ec9bc846379a550991b2489bd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -196,6 +196,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  m_OnClickEvent: {fileID: 11400000, guid: 248c45df0096a9f41a265c8ab8601479, type: 2}
 --- !u!1 &3363309418216395376
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 977b1745d818a6143b252a51243295a7, type: 3}
-  m_Name: GameplayUISettings
+  m_Name: DevelopmentGameplayUISettings
   m_EditorClassIdentifier: 
   m_templateUIPrefab: {fileID: 5077393927077237169, guid: b9690fc53a711a64185a7c94d6fd7bd9, type: 3}
   m_screenToRegister:
-  - {fileID: 8142602706151124223, guid: 5bcb3a31d95b40d4ea46316d290ea714, type: 3}
-  - {fileID: 4675392463925758474, guid: 0dffe5b1f4f070a4baf054aa76cc153c, type: 3}
   - {fileID: 3660932179028390974, guid: 2ecfb1e4a2cfb894b94e459969052be7, type: 3}
   - {fileID: 8204643869693547531, guid: 7e70145abc97f8e4c9416ffe8e47eb8c, type: 3}
+  - {fileID: 4675392463925758474, guid: 44d1e1b9fc8ed1a48898aef3f3576936, type: 3}
   m_deactivateScreenGos: 1

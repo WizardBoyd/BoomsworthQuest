@@ -1,3 +1,4 @@
+using System;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
@@ -5,6 +6,7 @@ using SaveSystem;
 using UI.Properties;
 using UnityEngine;
 using UnityEngine.UI;
+using WizardSave;
 using WizardUI;
 
 namespace UI.ScreenControllers
@@ -40,6 +42,9 @@ namespace UI.ScreenControllers
         private UIFrame m_uiFrame;
         [Inject]
         private TouchInputReader m_touchInputReader;
+        
+        [Inject]
+        private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
 
         private void Awake()
         {
@@ -98,10 +103,15 @@ namespace UI.ScreenControllers
 
         private void OpenSettingWindow()
         {
-            //m_uiFrame.OpenWindow<GameSettingsProperties>(LevelSelectionScreenIds.GameSettingWindow, new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
+            m_uiFrame.OpenWindow<GameSettingsProperties>(LevelSelectionScreenIds.GameSettingWindow, new GameSettingsProperties(m_autoSaveKeyValueStoreWrapper));
         } 
         
         private void OpenLanguageWindow() => m_uiFrame.OpenWindow(LevelSelectionScreenIds.LanguageSettingWindow);
-        
+
+        private void OnDestroy()
+        {
+            if(m_uiFrame != null)
+                Destroy(m_uiFrame);
+        }
     }
 }

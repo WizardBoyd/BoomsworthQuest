@@ -6,6 +6,7 @@ using SaveSystem;
 using UI.Properties;
 using UnityEngine;
 using UnityEngine.UI;
+using WizardSave;
 using WizardUI;
 
 namespace UI.ScreenControllers
@@ -14,6 +15,10 @@ namespace UI.ScreenControllers
     {
         public sealed class GameplayScreenIds
         {
+#if UNITY_EDITOR
+            public const string DevelopmentGameplayPausePanel = "DevelopmentGameplayPausePanel";
+#endif
+            public const string GameplayPauseSlide = "GameplayPauseSlide";
             public const string GameplayPausePanel = "GameplayPausePanel";
             public const string LevelFailedWindow = "LevelFailedWindow";
             public const string LevelCompleteWindow = "LevelCompleteWindow";
@@ -38,8 +43,12 @@ namespace UI.ScreenControllers
         private VoidEventChannelSO m_PauseButtonPressed = default;
 
         private UIFrame m_uiFrame;
+        
         [Inject]
         private TouchInputReader m_touchInputReader;
+        
+        [Inject]
+        private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
         
         private void Awake()
         {
@@ -50,7 +59,6 @@ namespace UI.ScreenControllers
                 scaler.referenceResolution = m_screenReferenceSize;
                 scaler.matchWidthOrHeight = m_uiScaleFactor;
             }
-            ShowHideCorePanels(true);
         }
 
         private void OnEnable()
@@ -58,6 +66,20 @@ namespace UI.ScreenControllers
             m_CloseCurrentWindow.OnEventRaised += CloseCurrentWindow;
             m_OpenWinWindow.OnEventRaised += OpenLevelCompletionWindow;
             m_OpenLoseWindow.OnEventRaised += OpenLevelFailedWindow;
+            m_PauseButtonPressed.OnEventRaised += OnPauseButtonPressed;
+        }
+
+        private void OnPauseButtonPressed()
+        {
+            if (!m_uiFrame.IsPanelOpen(GameplayScreenIds.GameplayPauseSlide))
+            {
+                m_uiFrame.ShowPanel<GameSettingsProperties>
+                    (GameplayScreenIds.GameplayPauseSlide, new GameSettingsProperties(m_autoSaveKeyValueStoreWrapper));
+            }
+            else
+            {
+                m_uiFrame.HidePanel(GameplayScreenIds.GameplayPauseSlide);
+            }
         }
 
         private void OnDisable()
@@ -65,22 +87,44 @@ namespace UI.ScreenControllers
             m_CloseCurrentWindow.OnEventRaised -= CloseCurrentWindow;
             m_OpenWinWindow.OnEventRaised -= OpenLevelCompletionWindow;
             m_OpenLoseWindow.OnEventRaised -= OpenLevelFailedWindow;
+            m_PauseButtonPressed.OnEventRaised -= OnPauseButtonPressed;
+        }
+
+        private void Start()
+        {
+            ShowHideCorePanels(true);
         }
         
-
+#if UNITY_EDITOR
         private void ShowHideCorePanels(bool show)
         {
             if (show)
             {
-                // m_uiFrame.ShowPanel<GameSettingsProperties>(
-                //     GameplayScreenIds.GameplayPausePanel,new GameSettingsProperties(SaveLoadSystem.Instance.PlayerSettingData));
+
+                m_uiFrame.ShowPanel(
+                    GameplayScreenIds.GameplayPausePanel);
+            }
+            else
+            {
+                m_uiFrame.HidePanel(GameplayScreenIds.GameplayPausePanel);
+                m_uiFrame.HidePanel(GameplayScreenIds.GameplayPauseSlide);
+            }
+        }
+#else
+        private void ShowHideCorePanels(bool show)
+        {
+            if (show)
+            {
+                m_uiFrame.ShowPanel<GameSettingsProperties>(
+                    GameplayScreenIds.GameplayPausePanel, new GameSettingsProperties(m_autoSaveKeyValueStoreWrapper));
+
             }
             else
             {
                 m_uiFrame.HidePanel(GameplayScreenIds.GameplayPausePanel);
             }
         }
-        
+#endif
         private void CloseCurrentWindow()
         {
             m_uiFrame.CloseCurrentWindow();
@@ -94,14 +138,22 @@ namespace UI.ScreenControllers
         
         private void OpenLevelCompletionWindow()
         {
+            ShowHideCorePanels(false);
             m_uiFrame.OpenWindow(GameplayScreenIds.LevelCompleteWindow);
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
         }
         
         private void OpenLevelFailedWindow()
         {
+            ShowHideCorePanels(false);
             m_uiFrame.OpenWindow(GameplayScreenIds.LevelFailedWindow);
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
+        }
+        
+        private void OnDestroy()
+        {
+            if(m_uiFrame != null)
+                Destroy(m_uiFrame);
         }
         
     }

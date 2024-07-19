@@ -59,7 +59,7 @@ namespace SaveSystem
             }
         }
 
-        private int LoadOrCreatePersistentData(AStreamSavableFile savableKeyValueStore)
+        private int LoadOrCreatePersistentData(DictionaryKeyValueStore savableKeyValueStore)
         {
             if(FileManager.FileExists(savableKeyValueStore.FilePath))
             {
@@ -68,6 +68,8 @@ namespace SaveSystem
             }
             else
             {
+                //Create the file
+                savableKeyValueStore.SetBool("SoundOn", true);
                 savableKeyValueStore.Save();
                 return 1;
             }

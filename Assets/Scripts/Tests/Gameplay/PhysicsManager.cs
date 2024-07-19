@@ -214,7 +214,12 @@ namespace Tests.Gameplay
         {
             on_SceneReady.OnEventRaised -= OnGameSceneReady;
         }
-        
+
+        private void OnDestroy()
+        {
+            SceneLoader.Instance.UnloadPhysicsScene(m_simulationScene);
+        }
+
 
         private void OnGameSceneReady()
         {

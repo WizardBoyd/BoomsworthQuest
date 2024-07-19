@@ -3,6 +3,7 @@ using UI.Properties;
 using UI.Widgets;
 using UnityEngine;
 using UnityEngine.UI;
+using WizardSave;
 using WizardUI.Window;
 
 namespace UI.WindowController
@@ -48,8 +49,9 @@ namespace UI.WindowController
         
         private void ToggleSound()
         {
-            //Properties.PlayerSettingsData.SoundOn = !Properties.PlayerSettingsData.SoundOn;
-//m_SoundButton.OnToggle(Properties.PlayerSettingsData.SoundOn);
+            bool isSoundOn = !Properties.KeyValueStore.GetBool("SoundOn");
+            m_SoundButton.OnToggle(isSoundOn);
+            Properties.KeyValueStore.SetBool("SoundOn", isSoundOn);
         }
         
         private void ToggleSFX()

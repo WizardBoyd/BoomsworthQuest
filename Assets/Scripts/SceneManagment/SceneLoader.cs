@@ -98,6 +98,7 @@ namespace SceneManagment
                         //Gameplay managers is loaded synchronously
                         m_gameplayManagerLoadingOpHandle =
                                 m_gameplayScene.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true);
+                        SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
                         //Blocking Call to wait
                         m_gameplayManagerLoadingOpHandle.WaitForCompletion();
                         m_gameplayManagerSceneInstance = m_gameplayManagerLoadingOpHandle.Result;
@@ -136,6 +137,7 @@ namespace SceneManagment
                     {
                             m_gameplayManagerLoadingOpHandle =
                                     m_gameplayScene.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true);
+                            SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
                             m_gameplayManagerLoadingOpHandle.Completed += OnGameplayPersistentManagerLoaded;
                     }
                     else

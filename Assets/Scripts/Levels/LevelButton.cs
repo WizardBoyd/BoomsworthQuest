@@ -38,6 +38,7 @@ namespace Levels
         }
         private SerializedLevel m_assignedLevel;
 
+        [HideInInspector]
         public LevelSceneSO LevelSceneSo;
 
         [Header("Broadcasting On Event")] 

@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a6554127b59940988f9134ae268d4c81, type: 3}
-  m_Name: LevelCompleteChannel
+  m_Name: DebugLevelFinished
   m_EditorClassIdentifier: 

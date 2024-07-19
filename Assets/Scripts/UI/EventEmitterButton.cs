@@ -62,5 +62,17 @@ namespace UI
 
             DoStateTransition(currentSelectionState, false);
         }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            Debug.Log($"{name} Awake");
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Debug.Log($"{name} OnDestroy");
+        }
     }
 }

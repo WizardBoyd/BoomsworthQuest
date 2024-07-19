@@ -1147,6 +1147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_onLevelStartPlayEvent: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
+  m_onLevelCompleteEvent: {fileID: 11400000, guid: 68fc3ec9684e6854f8511f0b6d770fd3, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

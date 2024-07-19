@@ -1,4 +1,6 @@
 using System;
+using UnityEditor.Localization.Plugins.XLIFF.V20;
+using WizardSave;
 using WizardUI.Window;
 
 namespace UI.Properties
@@ -6,11 +8,11 @@ namespace UI.Properties
     [Serializable]
     public class GameSettingsProperties : WindowProperties
     {
-        // public PlayerSettingsData PlayerSettingsData { get; private set; }
-        //
-        // public GameSettingsProperties(PlayerSettingsData data)
-        // {
-        //     PlayerSettingsData = data;
-        // }
+        public AutoSaveKeyValueStoreWrapper KeyValueStore { get; private set; }
+        
+        public GameSettingsProperties(AutoSaveKeyValueStoreWrapper data)
+        {
+            KeyValueStore = data;
+        }
     }
 }
