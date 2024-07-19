@@ -2,7 +2,7 @@ using System;
 using Events.ScriptableObjects;
 using UnityEngine;
 
-namespace Tests.Gameplay
+namespace Gameplay
 {
     public class BoomsWorth : MonoBehaviour
     {
@@ -32,9 +32,9 @@ namespace Tests.Gameplay
 
         private void Update()
         {
-            if(!HasLaunched)
-                return;
-            CheckIfStopped();
+            // if(!HasLaunched)
+            //     return;
+            // CheckIfStopped();
             
         }
 

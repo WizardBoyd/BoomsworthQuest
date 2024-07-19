@@ -26,8 +26,11 @@ namespace UI.PanelControllers
 
         protected override void OnPropertiesSet()
         {
-            bool soundOn = Properties.KeyValueStore.GetBool("SoundOn", true);
-            m_SoundEffectBtn.OnToggle(soundOn);
+            bool soundOn = false;
+            if(Properties.KeyValueStore.TryGetBool("SoundOn", out soundOn) == false)
+            {
+                m_SoundEffectBtn.OnToggle(soundOn);
+            }
         }
 
         protected override void WhileHiding()

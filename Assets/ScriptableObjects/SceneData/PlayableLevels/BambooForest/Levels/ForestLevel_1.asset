@@ -19,3 +19,4 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   m_levelIndex: 0
+  m_belongingZone: {fileID: 11400000, guid: a6724cd096b146346a96c30cd9d45692, type: 2}

@@ -836,6 +836,11 @@ MonoBehaviour:
     m_hideOnForegroundLost: 1
     m_windowQueuePriority: 4
     m_isPopUp: 0
+  m_loadmainMenu: {fileID: 11400000, guid: d1a958b1171813e4e96df4ba95954330, type: 2}
+  m_RetryLevel: {fileID: 11400000, guid: d74f529ef5c13054d97bded857bf29ed, type: 2}
+  m_RetryButton: {fileID: 755547745886556204}
+  m_backToMenuButton: {fileID: 4262149600657848204}
+  m_LevelSelectScene: {fileID: 11400000, guid: d28c4de89a54cdc4bb234a08cb458e37, type: 2}
 --- !u!1 &8530471215402303597
 GameObject:
   m_ObjectHideFlags: 0

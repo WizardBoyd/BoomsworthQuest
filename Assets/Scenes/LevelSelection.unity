@@ -606,7 +606,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_screenReferenceSize: {x: 1280, y: 1536}
-  m_uiScaleFactor: 0.5
+  m_uiScaleFactor: 1
   m_uiSettings: {fileID: 11400000, guid: 67df52141e6f86e428cd9e8540826ba1, type: 2}
   m_CloseCurrentWindow: {fileID: 11400000, guid: bb053270b7c1709438a9b927d1bea189, type: 2}
   m_OpenSettingsWindow: {fileID: 11400000, guid: c3cac8b2065381547a02e831df033235, type: 2}

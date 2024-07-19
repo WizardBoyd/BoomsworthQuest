@@ -37,8 +37,8 @@ namespace UI.WindowController
 
         protected override void OnPropertiesSet()
         {
-           // m_SoundButton.OnToggle( Properties.PlayerSettingsData.SoundOn);
-           // m_SFXButton.OnToggle(Properties.PlayerSettingsData.SFXOn);
+            bool isSoundOn = Properties.KeyValueStore.GetBool("SoundOn");
+            m_SoundButton.OnToggle(isSoundOn);
         }
 
         protected override void WhileHiding()

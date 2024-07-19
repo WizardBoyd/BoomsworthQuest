@@ -22,11 +22,11 @@ namespace Levels
     {
         private List<SerializedZone> SerializedZones
         {
-            get => LevelDataPersistencyManager.Instance.m_serializedZones;
+            get => LevelManager.Instance.m_serializedZones;
         }
         private Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone
         {
-            get => LevelDataPersistencyManager.Instance.m_zoneToSerializedZone;
+            get => LevelManager.Instance.m_zoneToSerializedZone;
         }
         
         [Header("Pool Helper")]

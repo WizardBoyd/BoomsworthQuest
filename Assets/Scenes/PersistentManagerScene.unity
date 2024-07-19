@@ -1148,6 +1148,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_onLevelStartPlayEvent: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
   m_onLevelCompleteEvent: {fileID: 11400000, guid: 68fc3ec9684e6854f8511f0b6d770fd3, type: 2}
+  m_onColdStartUpEvent: {fileID: 11400000, guid: 65354d8f8a8e0524aa18afff7f2134f5, type: 2}
+  m_LoadNextAvailableLevelEvent: {fileID: 11400000, guid: 5b4ab22805abc1f4ea049be522133f69, type: 2}
+  m_RetryLevel: {fileID: 11400000, guid: d74f529ef5c13054d97bded857bf29ed, type: 2}
+  m_onLoadLevelEvent: {fileID: 11400000, guid: 58ce2ff1d84ae9b42a6b4a0bceae1b5e, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

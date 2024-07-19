@@ -2,6 +2,7 @@ using System;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
+using Levels.Enums;
 using SaveSystem;
 using UI.Properties;
 using UnityEngine;
@@ -36,11 +37,15 @@ namespace UI.ScreenControllers
         [SerializeField]
         private VoidEventChannelSO m_OpenLoseWindow = default;
         [SerializeField]
-        private VoidEventChannelSO m_OpenWinWindow = default;
+        private LevelCompletionEventChannelSO m_OpenWinWindow = default;
         [SerializeField]
         private VoidEventChannelSO m_CloseCurrentWindow = default;
         [SerializeField]
         private VoidEventChannelSO m_PauseButtonPressed = default;
+        [SerializeField]
+        private VoidEventChannelSO m_OnNextLevel = default;
+        [SerializeField]
+        private VoidEventChannelSO m_RetryLevel = default;
 
         private UIFrame m_uiFrame;
         
@@ -67,7 +72,10 @@ namespace UI.ScreenControllers
             m_OpenWinWindow.OnEventRaised += OpenLevelCompletionWindow;
             m_OpenLoseWindow.OnEventRaised += OpenLevelFailedWindow;
             m_PauseButtonPressed.OnEventRaised += OnPauseButtonPressed;
+            m_OnNextLevel.OnEventRaised += ResetUI;
+            m_RetryLevel.OnEventRaised += ResetUI;
         }
+        
 
         private void OnPauseButtonPressed()
         {
@@ -88,6 +96,8 @@ namespace UI.ScreenControllers
             m_OpenWinWindow.OnEventRaised -= OpenLevelCompletionWindow;
             m_OpenLoseWindow.OnEventRaised -= OpenLevelFailedWindow;
             m_PauseButtonPressed.OnEventRaised -= OnPauseButtonPressed;
+            m_OnNextLevel.OnEventRaised -= ResetUI;
+            m_RetryLevel.OnEventRaised -= ResetUI;
         }
 
         private void Start()
@@ -95,12 +105,10 @@ namespace UI.ScreenControllers
             ShowHideCorePanels(true);
         }
         
-#if UNITY_EDITOR
         private void ShowHideCorePanels(bool show)
         {
             if (show)
             {
-
                 m_uiFrame.ShowPanel(
                     GameplayScreenIds.GameplayPausePanel);
             }
@@ -110,21 +118,6 @@ namespace UI.ScreenControllers
                 m_uiFrame.HidePanel(GameplayScreenIds.GameplayPauseSlide);
             }
         }
-#else
-        private void ShowHideCorePanels(bool show)
-        {
-            if (show)
-            {
-                m_uiFrame.ShowPanel<GameSettingsProperties>(
-                    GameplayScreenIds.GameplayPausePanel, new GameSettingsProperties(m_autoSaveKeyValueStoreWrapper));
-
-            }
-            else
-            {
-                m_uiFrame.HidePanel(GameplayScreenIds.GameplayPausePanel);
-            }
-        }
-#endif
         private void CloseCurrentWindow()
         {
             m_uiFrame.CloseCurrentWindow();
@@ -136,10 +129,10 @@ namespace UI.ScreenControllers
             }
         }
         
-        private void OpenLevelCompletionWindow()
+        private void OpenLevelCompletionWindow(LevelCompletionStatus levelCompletionStatus)
         {
             ShowHideCorePanels(false);
-            m_uiFrame.OpenWindow(GameplayScreenIds.LevelCompleteWindow);
+            m_uiFrame.OpenWindow<LevelCompleteWindowProperties>(GameplayScreenIds.LevelCompleteWindow, new LevelCompleteWindowProperties(levelCompletionStatus));
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
         }
         
@@ -150,11 +143,19 @@ namespace UI.ScreenControllers
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
         }
         
+        private void ResetUI()
+        {
+            m_uiFrame.HideAll(false);
+            ShowHideCorePanels(true);
+        }
+        
         private void OnDestroy()
         {
             if(m_uiFrame != null)
                 Destroy(m_uiFrame);
         }
+        
+        
         
     }
 }

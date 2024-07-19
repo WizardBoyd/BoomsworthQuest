@@ -132,6 +132,7 @@ namespace SceneManagment
                     m_showLoadingScreen = showLoadingScreen;
                     m_isLoading = true;
                     
+                    
                     //In case we are going from the the level selection screen we need to load the gameplay manager scene first
                     if (!m_gameplayManagerSceneInstance.Scene.isLoaded)
                     {
@@ -228,10 +229,10 @@ namespace SceneManagment
 
             private void LoadNewScene()
             {
+                    SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
                     m_loadingOperationHandle =
                             m_sceneToLoad.SceneReference.LoadSceneAsync(LoadSceneMode.Additive, true, 0);
                     m_loadingOperationHandle.Completed += OnNewSceneLoaded;
-                    SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
             }
 
             private void SceneManagerOnsceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
@@ -261,6 +262,7 @@ namespace SceneManagment
                     
                     //The scene is now ready to play emit event
                     m_SceneReadyChannel.RaiseEvent();
+                    Addressables.Release(m_loadingOperationHandle);
             }
     }
 }

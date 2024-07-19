@@ -1,10 +1,11 @@
 using System;
 using Events.ScriptableObjects;
+using Tests.Gameplay;
 using Tests.Input;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Tests.Gameplay
+namespace Gameplay
 {
     [RequireComponent(typeof(LineRenderer))]
     public class Canon : MonoBehaviour

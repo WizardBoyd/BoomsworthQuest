@@ -12,6 +12,11 @@ namespace Levels
 {
     public class LevelButton : MonoBehaviour
     {
+        //[Header("Configuration")]
+        private Color m_lockedColor = Color.white;
+        private Color m_unlockedColor = Color.cyan;
+        private Color m_unlockedStarColor = Color.yellow;
+        
         [Header("Stars")] 
         [SerializeField] private RectTransform LeftStar;
         [SerializeField] private RectTransform MiddleStar;
@@ -66,12 +71,14 @@ namespace Levels
             {
                 Lock.gameObject.SetActive(true);
                 button.interactable = false;
+                button.image.color = m_lockedColor;
             }
             else
             {
                 Lock.gameObject.SetActive(false);
                 //Activate the button intractable state
                 button.interactable = true;
+                button.image.color = m_assignedLevel.CompletionStatus == LevelCompletionStatus.Unkown ? m_lockedColor : m_unlockedColor;
             }
             numberText.text = AssignedLevel.LevelIndex.ToString();
         }
@@ -79,9 +86,15 @@ namespace Levels
         
         private void UpdateStarView()
         {
+            Image leftStarImage = LeftStar.GetComponent<Image>();
+            Image middleStarImage = MiddleStar.GetComponent<Image>();
+            Image rightStarImage = RightStar.GetComponent<Image>();
             LeftStar.gameObject.SetActive(false);
             MiddleStar.gameObject.SetActive(false);
             RightStar.gameObject.SetActive(false);
+            leftStarImage.color = m_lockedColor;
+            middleStarImage.color = m_lockedColor;
+            rightStarImage.color = m_lockedColor;
             
             if (AssignedLevel.CompletionStatus == LevelCompletionStatus.Unkown)
             {
@@ -93,15 +106,21 @@ namespace Levels
                 {
                     case LevelCompletionStatus.OneStarCompletion:
                         LeftStar.gameObject.SetActive(true);
+                        leftStarImage.color = m_unlockedStarColor;
                         break;
                     case LevelCompletionStatus.TwoStarCompletion:
                         LeftStar.gameObject.SetActive(true);
                         MiddleStar.gameObject.SetActive(true);
+                        leftStarImage.color = m_unlockedStarColor;
+                        middleStarImage.color = m_unlockedStarColor;
                         break;
                     case LevelCompletionStatus.ThreeStarCompletion:
                         LeftStar.gameObject.SetActive(true);
                         MiddleStar.gameObject.SetActive(true);
                         RightStar.gameObject.SetActive(true);
+                        leftStarImage.color = m_unlockedStarColor;
+                        middleStarImage.color = m_unlockedStarColor;
+                        rightStarImage.color = m_unlockedStarColor;
                         break;
                 }
             }

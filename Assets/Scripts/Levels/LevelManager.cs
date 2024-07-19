@@ -10,6 +10,7 @@ using Levels.ScriptableObjects;
 using Levels.SerializableData;
 using Misc.FileManagment;
 using Misc.Singelton;
+using SceneManagment.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -24,7 +25,7 @@ namespace Levels
     /// and persist it to the local storage.
     /// also if a level is complete it will update the level data to reflect that.
     /// </summary>
-    public class LevelDataPersistencyManager : MonoBehaviorSingleton<LevelDataPersistencyManager>
+    public class LevelManager : MonoBehaviorSingleton<LevelManager>
     {
 
         private IList<IResourceLocation> m_zoneResourceLocations = new List<IResourceLocation>();
@@ -40,6 +41,18 @@ namespace Levels
         private LoadLevelEventChannelSO m_onLevelStartPlayEvent;
         [SerializeField]
         private LevelCompletionEventChannelSO m_onLevelCompleteEvent;
+#if UNITY_EDITOR
+        [SerializeField]
+        private LoadSceneEventChannelSO m_onColdStartUpEvent;
+#endif
+        [SerializeField]
+        private VoidEventChannelSO m_LoadNextAvailableLevelEvent;
+        [SerializeField]
+        private VoidEventChannelSO m_RetryLevel = default;
+        
+        [Header("Broadcasting On")]
+        [SerializeField]
+        private LoadLevelEventChannelSO m_onLoadLevelEvent;
         
         public List<SerializedZone> m_serializedZones { get; private set; } = new List<SerializedZone>();
         public Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone { get; private set;} = new Dictionary<ZoneSO, SerializedZone>();
@@ -59,13 +72,24 @@ namespace Levels
         {
             m_onLevelStartPlayEvent.OnLoadingRequested += OnLevelStartPlay;
             m_onLevelCompleteEvent.OnEventRaised += OnLevelComplete;
+            m_LoadNextAvailableLevelEvent.OnEventRaised += OnLoadNextAvailableLevel;
+            m_RetryLevel.OnEventRaised += OnRetryLevel;
+#if UNITY_EDITOR
+            m_onColdStartUpEvent.OnLoadingRequested += ColdStartUp;
+#endif
         }
 
         private void OnDisable()
         {
             m_onLevelStartPlayEvent.OnLoadingRequested -= OnLevelStartPlay;
             m_onLevelCompleteEvent.OnEventRaised -= OnLevelComplete;
+            m_LoadNextAvailableLevelEvent.OnEventRaised -= OnLoadNextAvailableLevel;
+            m_RetryLevel.OnEventRaised -= OnRetryLevel;
+#if UNITY_EDITOR
+            m_onColdStartUpEvent.OnLoadingRequested -= ColdStartUp;
+#endif
         }
+        
 
         private IEnumerator Start()
         {
@@ -200,13 +224,20 @@ namespace Levels
         {
             m_currentPlayingLevelSceneSo = levelSceneSo;
         }
-   
+
+#if UNITY_EDITOR
+        private void ColdStartUp(GameSceneSO currentlyPlayingScene, bool showLoadingScreen, bool fadeScreen)
+        {
+            if(currentlyPlayingScene.SceneType != GameSceneSO.GameSceneType.Level)
+                return;
+            m_currentPlayingLevelSceneSo = (LevelSceneSO) currentlyPlayingScene;
+        }
+#endif
 
         private void OnLevelComplete(LevelCompletionStatus levelCompletionStatus)
         {
             SerializedZone zone = m_zoneToSerializedZone[m_currentPlayingLevelSceneSo.BelongingZone];
             SerializedLevel level = zone.Levels.FirstOrDefault(x => x.LevelIndex == m_currentPlayingLevelSceneSo.LevelIndex);
-            m_currentPlayingLevelSceneSo = null;
             if(level == null)
                 return;
             level.CompletionStatus = levelCompletionStatus;
@@ -259,6 +290,35 @@ namespace Levels
             if(m_serializedCurrentLevelProgression.CurrentLevelIndex > level.LevelIndex)
                 return true;
             return false;
+        }
+        
+        private void OnLoadNextAvailableLevel()
+        {
+            var currentZone = m_currentPlayingLevelSceneSo.BelongingZone;
+            SerializedZone zone = m_zoneToSerializedZone[currentZone];
+            SerializedLevel level = zone.Levels.FirstOrDefault(x => x.LevelIndex == m_currentPlayingLevelSceneSo.LevelIndex);
+            LevelSceneSO nextLevel = null;
+            if (IsLevelLastInZone(zone, level))
+            {
+                //Get the next zone
+               var nextZone = m_zoneToSerializedZone.FirstOrDefault(x => x.Key.ZoneIndex == currentZone.ZoneIndex + 1);
+               nextLevel = nextZone.Key.Levels[0];
+               if (nextLevel == null)
+               {
+                   Debug.LogError("No next level found");
+                   return;
+               }
+            }
+            else
+            {
+                nextLevel = currentZone.Levels[m_currentPlayingLevelSceneSo.LevelIndex + 1];
+            }
+            m_onLoadLevelEvent.RaiseEvent(nextLevel, true, true);
+        }
+        
+        private void OnRetryLevel()
+        {
+            m_onLoadLevelEvent.RaiseEvent(m_currentPlayingLevelSceneSo, true, true);
         }
       
         
