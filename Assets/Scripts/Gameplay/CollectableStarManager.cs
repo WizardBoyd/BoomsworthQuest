@@ -1,8 +1,8 @@
 using System;
 using Levels.Enums;
-using Misc.Singelton;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace Gameplay
 {

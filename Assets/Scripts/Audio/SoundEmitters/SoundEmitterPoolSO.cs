@@ -1,5 +1,6 @@
-using Factory;
 using UnityEngine;
+using WizardOptimizations.Runtime.Factory;
+using WizardOptimizations.Runtime.Pool;
 
 namespace Audio.SoundEmitters
 {

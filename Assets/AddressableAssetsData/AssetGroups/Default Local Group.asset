@@ -57,6 +57,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e5edda3a9bac4b245a0ee3435420e667
+    m_Address: Assets/ScriptableObjects/SceneData/PersistentManager.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d28c4de89a54cdc4bb234a08cb458e37
+    m_Address: Assets/ScriptableObjects/SceneData/Level Select Entry.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 120f224772c407141a6998daabeed44c
+    m_Address: Assets/ScriptableObjects/SceneData/GameplayManager.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a83b8db1325e1ef429f0897c008677ab
+    m_Address: PreLoadingScreen
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}
   m_SchemaSet:

@@ -4,13 +4,13 @@ using DependencyInjection;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
-using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace SceneManagment
 {
@@ -262,7 +262,6 @@ namespace SceneManagment
                     
                     //The scene is now ready to play emit event
                     m_SceneReadyChannel.RaiseEvent();
-                    Addressables.Release(m_loadingOperationHandle);
             }
     }
 }

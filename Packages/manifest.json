@@ -21,6 +21,8 @@
     "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.9",
     "com.unity.ugui": "1.0.0",
     "com.unity.visualscripting": "1.9.1",
+    "com.wizboyd.wizardaddressables": "https://github.com/WizardBoyd/WizardAddressables.git",
+    "com.wizboyd.wizardoptimizations": "https://github.com/WizardBoyd/WizardOptimizations.git",
     "com.wizboyd.wizardsave": "https://github.com/WizardBoyd/WizardSave.git",
     "com.wizboyd.wizardui": "https://github.com/WizardBoyd/WizardUI.git",
     "com.unity.modules.ai": "1.0.0",

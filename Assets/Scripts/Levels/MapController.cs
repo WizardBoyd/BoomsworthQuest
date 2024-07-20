@@ -1,33 +1,19 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DependencyInjection.attributes;
+using System.Linq;
 using Events.ScriptableObjects;
-using Factory;
 using Levels.ScriptableObjects;
 using Levels.SerializableData;
-using Misc.Singelton;
-using Mkey;
-using SaveSystem;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
-using WizardSave;
+using WizardOptimizations.Runtime.Pool;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace Levels
 {
     [RequireComponent(typeof(RectTransform))]
     public class MapController : MonoBehaviorSingleton<MapController>
     {
-        private List<SerializedZone> SerializedZones
-        {
-            get => LevelManager.Instance.m_serializedZones;
-        }
-        private Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone
-        {
-            get => LevelManager.Instance.m_zoneToSerializedZone;
-        }
         
         [Header("Pool Helper")]
         [SerializeField]
@@ -40,18 +26,17 @@ namespace Levels
         [Header("Listen On")]
         [SerializeField]
         private VoidEventChannelSO m_OnLevelReadyEvent;
-        
-        private List<RectTransform> m_zones = new List<RectTransform>();
 
-        protected override void Awake()
+        private void OnEnable()
         {
-            base.Awake();
-            InstantiateRuntimeZones();
+            m_OnLevelReadyEvent.OnEventRaised += InstantiateRuntimeZones;
         }
-        
-        private void InstantiateRuntimeZones()
+
+
+        public void InstantiateRuntimeZones()
         {
-            foreach (var (zoneSo, serializedZone) in m_zoneToSerializedZone)
+            m_OnLevelReadyEvent.OnEventRaised -= InstantiateRuntimeZones;
+            foreach (var zoneSo in LevelManager.Instance.m_zoneSos)
             {
                 var zone = CreateZoneTemplate(zoneSo);
                 SpawnLevelButtonsForZone(zone, zoneSo);
@@ -80,7 +65,7 @@ namespace Levels
                 var levelButton = m_buttonPool.Request();
                 levelButton.transform.SetParent(zoneTemplate.transform);
                 levelButton.transform.position = zoneTemplate.transform.TransformPoint(post[i]);
-                levelButton.AssignedLevel = m_zoneToSerializedZone[zoneSo].Levels[i];
+                levelButton.AssignedLevel = LevelManager.Instance.m_zoneToSerializedZone[zoneSo].Levels[i];
                 levelButton.LevelSceneSo = zoneSo.Levels[i];
             }
         }

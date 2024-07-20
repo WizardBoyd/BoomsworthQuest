@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using DependencyInjection;
 using DependencyInjection.attributes;
-using Misc.Singelton;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.Pool;
+using WizardOptimizations.Runtime.Singelton;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 

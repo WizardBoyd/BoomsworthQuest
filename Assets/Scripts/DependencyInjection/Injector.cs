@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DependencyInjection.attributes;
-using Misc.Singelton;
 using UnityEngine;
 using UnityEngine.Localization.Tables;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace DependencyInjection
 {

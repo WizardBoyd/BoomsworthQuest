@@ -1,17 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Events.ScriptableObjects;
 using SceneManagment.ScriptableObjects;
-using TaskManagment.Loading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
-using TaskScheduler = TaskManagment.TaskScheduler;
+using WizardAddressables.Runtime.AssetManagement;
 
 public class InitializerLoader : MonoBehaviour
 {
@@ -21,6 +15,8 @@ public class InitializerLoader : MonoBehaviour
     [Header("Broadcasting On")]
     [SerializeField] private AssetReferenceT<LoadSceneEventChannelSO> m_menuLoadChannel = null;
     
+    private AsyncOperationHandle<LoadSceneEventChannelSO> m_loadLevelEventChannelHandle;
+    
     private void Start()
     {
         //Start Loading the Persistent Manager Scene
@@ -29,12 +25,21 @@ public class InitializerLoader : MonoBehaviour
 
     private void On_PersistentManagerSceneLoaded(AsyncOperationHandle<SceneInstance> obj)
     {
-        m_menuLoadChannel.LoadAssetAsync<LoadSceneEventChannelSO>().Completed += LoadMainGameScene;
+      
+        if (!AssetManager.Instance.TryGetOrLoadObjectAsync<LoadSceneEventChannelSO>(m_menuLoadChannel,
+                out m_loadLevelEventChannelHandle))
+        {
+            m_loadLevelEventChannelHandle.Completed += LoadMainGameScene;
+        }
+        else
+        {
+            LoadMainGameScene(m_loadLevelEventChannelHandle);
+        }
     }
-
-    private void LoadMainGameScene(AsyncOperationHandle<LoadSceneEventChannelSO> obj)
+    
+    private void LoadMainGameScene(AsyncOperationHandle<LoadSceneEventChannelSO> eventChannel)
     {
-        obj.Result.RaiseEvent(_MainGameSceneToLoad, true);
+        eventChannel.Result.RaiseEvent(_MainGameSceneToLoad, true);
         SceneManager.UnloadSceneAsync(0);
     }
     

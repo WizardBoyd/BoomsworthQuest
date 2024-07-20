@@ -42,8 +42,8 @@ namespace Audio
 		//TODO: Get the initial volume levels from the settings
 		_soundEmitterVault = new SoundEmitterVault();
 
-		_pool.Prewarm(_initialSize);
-		_pool.SetParent(this.transform);
+		_pool.PreWarm(_initialSize);
+		_pool.Parent = this.transform;
 	}
 
 	private void OnEnable()

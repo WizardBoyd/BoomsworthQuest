@@ -1,9 +1,9 @@
 using System;
 using DG.Tweening;
 using Events.ScriptableObjects;
-using Misc.Singelton;
 using UnityEngine;
 using UnityEngine.UI;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace UI
 {

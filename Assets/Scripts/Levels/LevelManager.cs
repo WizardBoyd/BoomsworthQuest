@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -9,12 +8,13 @@ using Levels.Enums;
 using Levels.ScriptableObjects;
 using Levels.SerializableData;
 using Misc.FileManagment;
-using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
+using WizardAddressables.Runtime.AssetManagement;
+using WizardOptimizations.Runtime.Singelton;
 using WizardSave;
 using WizardSave.ObjectSerializers;
 
@@ -55,9 +55,12 @@ namespace Levels
         private LoadLevelEventChannelSO m_onLoadLevelEvent;
         
         public List<SerializedZone> m_serializedZones { get; private set; } = new List<SerializedZone>();
+        public List<ZoneSO> m_zoneSos { get; private set; } = new List<ZoneSO>();
         public Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone { get; private set;} = new Dictionary<ZoneSO, SerializedZone>();
 
         private LevelSceneSO m_currentPlayingLevelSceneSo;
+        
+        
         
 
         protected override void Awake()
@@ -65,7 +68,6 @@ namespace Levels
             base.Awake();
             m_levelDataStore = new DictionaryKeyValueStore();
             m_levelDataStore.FilePath = Path.Combine(Application.persistentDataPath, "LevelData.json");
-            GetZoneResourceLocations(out m_zoneResourceLocations);
         }
 
         private void OnEnable()
@@ -93,6 +95,9 @@ namespace Levels
 
         private IEnumerator Start()
         {
+            yield return GetZoneSos();
+            m_serializedZones = m_serializedZones.OrderBy(x => x.ZoneIndex).ToList();
+            m_zoneSos = m_zoneSos.OrderBy(x => x.ZoneIndex).ToList();
             yield return CreateOrLoadLevelData();
         }
 
@@ -112,12 +117,7 @@ namespace Levels
 
         private IEnumerator CreateNewLevelData()
         {
-            foreach (IResourceLocation location in m_zoneResourceLocations)
-            {
-                yield return LoadZoneSo(location);
-            }
-
-            SerializedZone firstZone = m_serializedZones.FirstOrDefault(x => x.ZoneIndex == 0);
+            SerializedZone firstZone = m_serializedZones[0];
             if (firstZone == null)
             {
                 Debug.LogError($"No Zone has a ZoneIndex of 0");
@@ -131,44 +131,27 @@ namespace Levels
             m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
             m_levelDataStore.Save();
         }
-
-        private IEnumerator LoadZoneSo(IResourceLocation location)
+        
+        private void CreateSerializedZone(object key, AsyncOperationHandle<ZoneSO> handle)
         {
-            var handle = Addressables.LoadAssetAsync<ZoneSO>(location);
-            if (!handle.IsDone)
-                yield return handle;
-            if (handle.Status != AsyncOperationStatus.Succeeded)
-            {
-                Debug.LogError($"Failed to load Zones from Addressables");
-                yield break;
-            }
-            SerializedZone zone = CreateSerializedZone(location, handle.Result);
-            m_serializedZones.Add(zone);
-            m_zoneToSerializedZone.Add(handle.Result, zone);
-            Addressables.Release(handle);
-        }
-
-        private SerializedZone CreateSerializedZone(IResourceLocation location, ZoneSO so)
-        {
-            SerializedZone serializedZone = new SerializedZone(location.PrimaryKey, so.ZoneIndex);
-            serializedZone.Levels = new SerializedLevel[so.Levels.Length];
-            for(int i = 0 ; i < so.Levels.Length; i++)
+            SerializedZone serializedZone = new SerializedZone(key.ToString(), handle.Result.ZoneIndex);
+            serializedZone.Levels = new SerializedLevel[handle.Result.Levels.Length];
+            for(int i = 0 ; i < handle.Result.Levels.Length; i++)
             {
                 SerializedLevel serializedLevel = new SerializedLevel();
-                serializedLevel.LevelIndex = so.Levels[i].LevelIndex;
+                serializedLevel.LevelIndex = handle.Result.Levels[i].LevelIndex;
                 serializedLevel.CurrentlyLocked = true;
                 serializedLevel.CompletionStatus = LevelCompletionStatus.Unkown;
                 serializedZone.Levels[i] = serializedLevel;
             }
-            return serializedZone;
+            m_zoneToSerializedZone.Add(handle.Result, serializedZone);
+            m_zoneSos.Add(handle.Result);
+            m_serializedZones.Add(serializedZone);
         }
-        
-        private void GetZoneResourceLocations(out IList<IResourceLocation> zoneResourceLocations)
+        private IEnumerator GetZoneSos()
         {
-            var handle = Addressables.LoadResourceLocationsAsync("Zone", typeof(ZoneSO));
-            handle.WaitForCompletion(); //Blocking Call
-            zoneResourceLocations = handle.Result;
-            Addressables.Release(handle); //Not sure if this will delete the resource locations
+            var handle = AssetManager.Instance.LoadAssetsByLabelAsync<ZoneSO>("Zone", CreateSerializedZone);
+            yield return handle;
         }
         
         //Loading
@@ -179,44 +162,36 @@ namespace Levels
                 m_levelDataStore.GetObject<SerializedCurrentLevelProgression>("CurrentLevelProgression",
                     m_serializedCurrentLevelProgression);
             yield return LoadSerializedLevelIntoList();
-            IList<IResourceLocation> resourceLocationsNotInSave = new List<IResourceLocation>();
-            GetResourceLocationsNotInSave(out resourceLocationsNotInSave);
-            foreach (IResourceLocation location in resourceLocationsNotInSave)
-            {
-                //Load in any new zones not in the save file
-                yield return LoadZoneSo(location);
-            }
             m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
             m_levelDataStore.Save();
         }
-
-        private void GetResourceLocationsNotInSave(out IList<IResourceLocation> zoneResourceLocations)
-        {
-            zoneResourceLocations = m_zoneResourceLocations.Where(x => m_serializedZones.All(y => y.ZoneSoAssetKey != x.PrimaryKey)).ToList();
-        }
-
+        
         private IEnumerator LoadSerializedLevelIntoList()
         {
-            var mSerializedZones = m_serializedZones;
+            var tempZoneToSerializedZone = new Dictionary<ZoneSO, SerializedZone>();
             if (!m_levelDataStore.TryGetObject<List<SerializedZone>>(m_objectSerializerMap, "SerializedZones",
-                    out mSerializedZones))
+                    out var mSerializedZones))
             {
                 Debug.LogError($"Failed to load SerializedZones into list");
             }
 
             foreach (SerializedZone serializedZone in mSerializedZones)
             {
-                var handle = Addressables.LoadAssetAsync<ZoneSO>(serializedZone.ZoneSoAssetKey);
-                if (!handle.IsDone)
-                    yield return handle;
-                if (handle.Status != AsyncOperationStatus.Succeeded)
+                if (!AssetManager.Instance.TryGetOrLoadObjectAsync<ZoneSO>(serializedZone.ZoneSoAssetKey,
+                        out AsyncOperationHandle<ZoneSO> zoneHandle))
                 {
-                    Debug.LogError($"Failed to load ZoneSO from Addressables");
-                    continue;
+                    //if the zone is not loaded then we need to wait for it to load
+                    if (!zoneHandle.IsDone)
+                        yield return zoneHandle;
+                    if (zoneHandle.Status != AsyncOperationStatus.Succeeded)
+                    {
+                        Debug.LogError($"Failed to load ZoneSO from Addressables");
+                        continue;
+                    }
                 }
-                m_zoneToSerializedZone.Add(handle.Result, serializedZone);
-                Addressables.Release(handle);
+                tempZoneToSerializedZone.Add(zoneHandle.Result, serializedZone);
             }
+            m_zoneToSerializedZone = tempZoneToSerializedZone;
             m_serializedZones = mSerializedZones;
         }
         

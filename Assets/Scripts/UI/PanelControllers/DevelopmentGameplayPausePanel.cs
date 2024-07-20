@@ -11,7 +11,7 @@ namespace UI.PanelControllers
 {
     public class DevelopmentGameplayPausePanel : APanelController<GameSettingsProperties>
     {
-#if UNITY_EDITOR
+
         
          [Header("Listen On")] 
         [SerializeField] 
@@ -116,6 +116,6 @@ namespace UI.PanelControllers
         {
             
         }
-#endif
+
     }
 }

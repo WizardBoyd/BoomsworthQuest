@@ -3,11 +3,11 @@ using System.Collections;
 using Events.ScriptableObjects;
 using Gameplay;
 using Levels.Enums;
-using Misc.Singelton;
 using SceneManagment.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using WizardOptimizations.Runtime.Singelton;
 
 namespace Gameplay
 {

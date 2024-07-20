@@ -1,5 +1,5 @@
-using Factory;
 using UnityEngine;
+using WizardOptimizations.Runtime.Factory;
 
 namespace Levels.ScriptableObjects
 {

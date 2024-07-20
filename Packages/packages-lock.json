@@ -473,6 +473,23 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.wizboyd.wizardaddressables": {
+      "version": "https://github.com/WizardBoyd/WizardAddressables.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.addressables": "1.21.21",
+        "com.wizboyd.wizardoptimizations": "1.0.0"
+      },
+      "hash": "b694030775d4caa5431220f07dad899409f7f265"
+    },
+    "com.wizboyd.wizardoptimizations": {
+      "version": "https://github.com/WizardBoyd/WizardOptimizations.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8eaaf1c07bac51185c68a4ab24680731b6ce9238"
+    },
     "com.wizboyd.wizardsave": {
       "version": "https://github.com/WizardBoyd/WizardSave.git",
       "depth": 0,

@@ -4,8 +4,6 @@ using System.Linq;
 using Events.ScriptableObjects;
 using Gameplay;
 using Misc.ExtensionMethods;
-using Misc.Singelton;
-using Pool;
 using SceneManagment;
 using Unity.Collections;
 using Unity.Mathematics;
@@ -13,6 +11,8 @@ using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
+using WizardOptimizations.Runtime.Pool;
+using WizardOptimizations.Runtime.Singelton;
 using Object = UnityEngine.Object;
 
 namespace Tests.Gameplay
@@ -70,7 +70,7 @@ namespace Tests.Gameplay
             m_physicsScene = physicsScene;
         }
         
-        public void Prewarm(int num)
+        public void PreWarm(int num)
         {
             if(bIsPrewarmed)
                 return;
@@ -208,7 +208,7 @@ namespace Tests.Gameplay
         private void OnEnable()
         {
             on_SceneReady.OnEventRaised += OnGameSceneReady;
-            m_pool.Prewarm(10);
+            m_pool.PreWarm(10);
         }
 
         private void OnDisable()
