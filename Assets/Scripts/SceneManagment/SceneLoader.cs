@@ -172,10 +172,6 @@ namespace SceneManagment
                     StartCoroutine(UnloadPreviousScene());
             }
 
-
-
-           
-
             private IEnumerator UnloadPreviousScene()
             {
                     //TODO disable all input on mobile screen
@@ -226,7 +222,6 @@ namespace SceneManagment
                     }
             }
             
-
             private void LoadNewScene()
             {
                     SceneManager.sceneLoaded += SceneManagerOnsceneLoaded;
