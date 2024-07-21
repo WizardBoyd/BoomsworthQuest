@@ -2,10 +2,10 @@ namespace Levels.Enums
 {
     public enum LevelCompletionStatus
     {
-        Unkown,
-        NoStarCompletion,
-        OneStarCompletion,
-        TwoStarCompletion,
-        ThreeStarCompletion
+        Unkown = 0,
+        NoStarCompletion = 1,
+        OneStarCompletion = 2,
+        TwoStarCompletion = 3,
+        ThreeStarCompletion = 4
     }
 }

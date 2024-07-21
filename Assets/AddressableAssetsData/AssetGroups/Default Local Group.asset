@@ -77,6 +77,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 529ab459e4d9b914eb07c190c9743d3f
+    m_Address: Assets/Prefabs/Gameplay/BoomsWorth.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a59d0a42543b9954aa07953fb7153ead
+    m_Address: Assets/Prefabs/Gameplay/Canon.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bda222ff23df50a46bcecb5ef7a681e9
+    m_Address: Assets/Prefabs/Gameplay/ColletableStar.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68490577bc76cd84abe05cd518716071
+    m_Address: Assets/Prefabs/Gameplay/Target.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 909c8bfa044be704999b0691bd72f2c3, type: 2}
   m_SchemaSet:

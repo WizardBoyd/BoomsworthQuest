@@ -202,25 +202,21 @@ namespace Tests.Gameplay
             CreateSceneParameters createSceneParameters = new CreateSceneParameters(LocalPhysicsMode.Physics2D);
             m_simulationScene = SceneManager.CreateScene("SimulationScene", createSceneParameters);
             m_PhysicsScene = m_simulationScene.GetPhysicsScene2D();
+            SceneLoader.Instance.RegisterPhysicsScene(m_simulationScene);
             m_pool = new PhysicsPool(m_simulationScene);
+            m_pool.PreWarm(10);
         }
 
         private void OnEnable()
         {
             on_SceneReady.OnEventRaised += OnGameSceneReady;
-            m_pool.PreWarm(10);
         }
 
         private void OnDisable()
         {
             on_SceneReady.OnEventRaised -= OnGameSceneReady;
         }
-
-        private void OnDestroy()
-        {
-            SceneLoader.Instance.UnloadPhysicsScene(m_simulationScene);
-        }
-
+        
 
         private void OnGameSceneReady()
         {

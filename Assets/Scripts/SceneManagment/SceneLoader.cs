@@ -61,6 +61,7 @@ namespace SceneManagment
 
         //This is for when loading out of game back into menu level we want to wait before loading back into menu
         private AsyncOperation m_currentlyLoadedPhysicsScene = null;
+        private Scene m_currentlyLoadedPhysicsSceneInstance;
         
         [Inject]
         private TouchInputReader m_touchInputReader;
@@ -132,7 +133,6 @@ namespace SceneManagment
                     m_showLoadingScreen = showLoadingScreen;
                     m_isLoading = true;
                     
-                    
                     //In case we are going from the the level selection screen we need to load the gameplay manager scene first
                     if (!m_gameplayManagerSceneInstance.Scene.isLoaded)
                     {
@@ -184,6 +184,7 @@ namespace SceneManagment
                             m_toggleLoadingScreen.RaiseEvent(true);
                     }
                     
+                    
                     //would be null if the game was started in Initialisation 
                     if (m_currentlyLoadedScene != null)
                     {
@@ -192,6 +193,10 @@ namespace SceneManagment
                             {
                                     //unload the scene through its assetReference i.e through the addressable system
                                     m_currentlyLoadedScene.SceneReference.UnLoadScene();
+                                    if (m_loadingOperationHandle.IsValid())
+                                    {
+                                            Addressables.Release(m_loadingOperationHandle);
+                                    }
                             }
 #if UNITY_EDITOR
                             else
@@ -204,22 +209,24 @@ namespace SceneManagment
                             }            
 #endif
                     }
-
-                    if (m_currentlyLoadedPhysicsScene != null)
+                    
+                    if (m_currentlyLoadedPhysicsSceneInstance.isLoaded)
                     {
+                            m_currentlyLoadedPhysicsScene = SceneManager.UnloadSceneAsync(m_currentlyLoadedPhysicsSceneInstance);
                             yield return m_currentlyLoadedPhysicsScene;
                             m_currentlyLoadedPhysicsScene = null;
+                            yield return new  WaitForEndOfFrame();
+                            LoadNewScene();
                     }
-
-                    LoadNewScene();
-            }
-
-            public void UnloadPhysicsScene(Scene physicsScene)
-            {
-                    if (physicsScene.isLoaded)
+                    else
                     {
-                            m_currentlyLoadedPhysicsScene = SceneManager.UnloadSceneAsync(physicsScene);
+                            LoadNewScene();
                     }
+            }
+            
+            public void RegisterPhysicsScene(Scene physicsScene)
+            {
+                    m_currentlyLoadedPhysicsSceneInstance = physicsScene;
             }
             
             private void LoadNewScene()

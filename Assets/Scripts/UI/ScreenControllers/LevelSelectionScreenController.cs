@@ -43,11 +43,11 @@ namespace UI.ScreenControllers
         [Inject]
         private TouchInputReader m_touchInputReader;
         
-        [Inject]
         private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
 
         private void Awake()
         {
+            m_autoSaveKeyValueStoreWrapper = new AutoSaveKeyValueStoreWrapper(SaveLoadSystem.Instance.GetSaveContainer("ApplicationStatus"));
             m_uiFrame = new UISettings.UIFrameBuilder(m_uiSettings).SetInstanceAndRegister().Build();
             if (m_uiFrame.TryGetComponent<CanvasScaler>(out CanvasScaler scaler))
             {

@@ -8,6 +8,7 @@ using Levels.Enums;
 using Levels.ScriptableObjects;
 using Levels.SerializableData;
 using Misc.FileManagment;
+using SaveSystem;
 using SceneManagment.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -17,6 +18,7 @@ using WizardAddressables.Runtime.AssetManagement;
 using WizardOptimizations.Runtime.Singelton;
 using WizardSave;
 using WizardSave.ObjectSerializers;
+using WizardSave.Utils;
 
 namespace Levels
 {
@@ -25,16 +27,21 @@ namespace Levels
     /// and persist it to the local storage.
     /// also if a level is complete it will update the level data to reflect that.
     /// </summary>
-    public class LevelManager : MonoBehaviorSingleton<LevelManager>
+    public class LevelManager : MonoBehaviorSingleton<LevelManager>, ISavableData
     {
-
-        private IList<IResourceLocation> m_zoneResourceLocations = new List<IResourceLocation>();
         
-        private DictionaryKeyValueStore m_levelDataStore;
-        [Inject]
+        public ISaveableKeyValueStore SaveContainer { get; set; }
+        
+        public string FilePath
+        {
+            get => "LevelData";
+        }
+        
         private ObjectSerializerMap m_objectSerializerMap;
-
+        
         private SerializedCurrentLevelProgression m_serializedCurrentLevelProgression;
+
+        private AsyncOperationHandle ZoneLoadHandle;
         
         [Header("Listening On")]
         [SerializeField]
@@ -59,16 +66,6 @@ namespace Levels
         public Dictionary<ZoneSO, SerializedZone> m_zoneToSerializedZone { get; private set;} = new Dictionary<ZoneSO, SerializedZone>();
 
         private LevelSceneSO m_currentPlayingLevelSceneSo;
-        
-        
-        
-
-        protected override void Awake()
-        {
-            base.Awake();
-            m_levelDataStore = new DictionaryKeyValueStore();
-            m_levelDataStore.FilePath = Path.Combine(Application.persistentDataPath, "LevelData.json");
-        }
 
         private void OnEnable()
         {
@@ -92,44 +89,76 @@ namespace Levels
 #endif
         }
         
-
         private IEnumerator Start()
         {
-            yield return GetZoneSos();
-            m_serializedZones = m_serializedZones.OrderBy(x => x.ZoneIndex).ToList();
-            m_zoneSos = m_zoneSos.OrderBy(x => x.ZoneIndex).ToList();
-            yield return CreateOrLoadLevelData();
-        }
-
-        private IEnumerator CreateOrLoadLevelData()
-        {
-            if (!FileManager.FileExists(m_levelDataStore.FilePath))
+            if (ZoneLoadHandle.IsValid() && !ZoneLoadHandle.IsDone)
             {
-                //Create a new level data file
-                yield return CreateNewLevelData();
-            }
-            else
-            {
-                //Load the level data file
-                yield return LoadLevelData();
+                yield return ZoneLoadHandle;
+                Debug.Log("Zone Load Handle is done");
             }
         }
 
-        private IEnumerator CreateNewLevelData()
+        public void NewSave(ObjectSerializerMap objectSerializerMap)
         {
-            SerializedZone firstZone = m_serializedZones[0];
-            if (firstZone == null)
-            {
-                Debug.LogError($"No Zone has a ZoneIndex of 0");
-                yield break;
-            }
-            firstZone.Levels[0].CurrentlyLocked = false;
+            m_objectSerializerMap = objectSerializerMap;
             m_serializedCurrentLevelProgression = new SerializedCurrentLevelProgression();
             m_serializedCurrentLevelProgression.CurrentLevelIndex = 0;
             m_serializedCurrentLevelProgression.CurrentZoneIndex = 0;
-            m_levelDataStore.SetObject(m_objectSerializerMap, "CurrentLevelProgression", m_serializedCurrentLevelProgression);
-            m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
-            m_levelDataStore.Save();
+            SaveContainer.SetObject(objectSerializerMap, "CurrentLevelProgression", m_serializedCurrentLevelProgression);
+            ZoneLoadHandle = AssetManager.Instance.LoadAssetsByLabelAsync<ZoneSO>("Zone", CreateSerializedZone);
+            ZoneLoadHandle.Completed += (handle) =>
+            {
+                m_serializedZones = m_zoneToSerializedZone.Values.OrderBy(x => x.ZoneIndex).ToList();
+                m_serializedZones[0].Levels[0].CurrentlyLocked = false;
+                m_zoneSos = m_zoneSos.OrderBy(x => x.ZoneIndex).ToList();
+                SaveContainer.SetObject(objectSerializerMap, "SerializedZones", m_serializedZones);
+                SaveContainer.Save();
+            };
+        }
+        
+        public void Load(ObjectSerializerMap objectSerializerMap)
+        {
+            m_objectSerializerMap = objectSerializerMap;
+            SaveContainer.Load();
+            if (!SaveContainer.TryGetObject<List<SerializedZone>>(objectSerializerMap, "SerializedZones",
+                    out var tempSerializedZones))
+            {
+                NewSave(objectSerializerMap);
+                return;
+            }
+            m_serializedZones = tempSerializedZones;
+            m_serializedCurrentLevelProgression =
+                SaveContainer.GetObject<SerializedCurrentLevelProgression>("CurrentLevelProgression",
+                    m_serializedCurrentLevelProgression);
+            ZoneLoadHandle = AssetManager.Instance.LoadAssetsByLabelAsync<ZoneSO>("Zone", LoadSerializedList);
+            ZoneLoadHandle.Completed += (handle) =>
+            {
+                m_serializedZones = m_zoneToSerializedZone.Values.OrderBy(x => x.ZoneIndex).ToList();
+                m_zoneSos = m_zoneSos.OrderBy(x => x.ZoneIndex).ToList();
+            };
+        }
+        
+        public void Save(ObjectSerializerMap objectSerializerMap)
+        {
+            SaveContainer.SetObject(objectSerializerMap, "SerializedZones", m_serializedZones);
+            SaveContainer.SetObject(objectSerializerMap, "CurrentLevelProgression", m_serializedCurrentLevelProgression);
+            SaveContainer.Save();
+        }
+
+        public void DeleteData()
+        {
+            SaveContainer.DeleteKey("SerializedZones");
+            SaveContainer.DeleteKey("CurrentLevelProgression");
+            SaveContainer.Save();
+        }
+
+        private void LoadSerializedList(object key, AsyncOperationHandle<ZoneSO> zoneSoHandle)
+        {
+            SerializedZone serializedZone = m_serializedZones.FirstOrDefault(x => x.ZoneSoAssetKey == key.ToString());
+            if(m_zoneToSerializedZone.ContainsKey(zoneSoHandle.Result))
+                return;
+            m_zoneToSerializedZone.Add(zoneSoHandle.Result, serializedZone);
+            m_zoneSos.Add(zoneSoHandle.Result);
         }
         
         private void CreateSerializedZone(object key, AsyncOperationHandle<ZoneSO> handle)
@@ -147,52 +176,6 @@ namespace Levels
             m_zoneToSerializedZone.Add(handle.Result, serializedZone);
             m_zoneSos.Add(handle.Result);
             m_serializedZones.Add(serializedZone);
-        }
-        private IEnumerator GetZoneSos()
-        {
-            var handle = AssetManager.Instance.LoadAssetsByLabelAsync<ZoneSO>("Zone", CreateSerializedZone);
-            yield return handle;
-        }
-        
-        //Loading
-        private IEnumerator LoadLevelData()
-        {
-            m_levelDataStore.Load();
-            m_serializedCurrentLevelProgression =
-                m_levelDataStore.GetObject<SerializedCurrentLevelProgression>("CurrentLevelProgression",
-                    m_serializedCurrentLevelProgression);
-            yield return LoadSerializedLevelIntoList();
-            m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
-            m_levelDataStore.Save();
-        }
-        
-        private IEnumerator LoadSerializedLevelIntoList()
-        {
-            var tempZoneToSerializedZone = new Dictionary<ZoneSO, SerializedZone>();
-            if (!m_levelDataStore.TryGetObject<List<SerializedZone>>(m_objectSerializerMap, "SerializedZones",
-                    out var mSerializedZones))
-            {
-                Debug.LogError($"Failed to load SerializedZones into list");
-            }
-
-            foreach (SerializedZone serializedZone in mSerializedZones)
-            {
-                if (!AssetManager.Instance.TryGetOrLoadObjectAsync<ZoneSO>(serializedZone.ZoneSoAssetKey,
-                        out AsyncOperationHandle<ZoneSO> zoneHandle))
-                {
-                    //if the zone is not loaded then we need to wait for it to load
-                    if (!zoneHandle.IsDone)
-                        yield return zoneHandle;
-                    if (zoneHandle.Status != AsyncOperationStatus.Succeeded)
-                    {
-                        Debug.LogError($"Failed to load ZoneSO from Addressables");
-                        continue;
-                    }
-                }
-                tempZoneToSerializedZone.Add(zoneHandle.Result, serializedZone);
-            }
-            m_zoneToSerializedZone = tempZoneToSerializedZone;
-            m_serializedZones = mSerializedZones;
         }
         
         private void OnLevelStartPlay(LevelSceneSO levelSceneSo, bool showLoadingScreen, bool fadeScreen)
@@ -215,7 +198,8 @@ namespace Levels
             SerializedLevel level = zone.Levels.FirstOrDefault(x => x.LevelIndex == m_currentPlayingLevelSceneSo.LevelIndex);
             if(level == null)
                 return;
-            level.CompletionStatus = levelCompletionStatus;
+            if(levelCompletionStatus > level.CompletionStatus)
+                level.CompletionStatus = levelCompletionStatus;
             //what if we re-complete an already completed level?
             if (!IsLevelAlreadyComplete(zone, level))
             {
@@ -245,12 +229,12 @@ namespace Levels
                     zone.Levels[level.LevelIndex + 1].CurrentlyLocked = false;
                 }
 
-                m_levelDataStore.SetObject(m_objectSerializerMap, "CurrentLevelProgression",
+                SaveContainer.SetObject(ObjectSerializerMap.DefaultSerializerMap, "CurrentLevelProgression",
                     m_serializedCurrentLevelProgression);
             }
-            m_levelDataStore.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
+            SaveContainer.SetObject(m_objectSerializerMap, "SerializedZones", m_serializedZones);
             //TODO uncomment the save
-            m_levelDataStore.Save();
+            SaveContainer.Save();
         }
         
         private bool IsLevelLastInZone(SerializedZone zone, SerializedLevel level)
@@ -295,7 +279,5 @@ namespace Levels
         {
             m_onLoadLevelEvent.RaiseEvent(m_currentPlayingLevelSceneSo, true, true);
         }
-      
-        
     }
 }
