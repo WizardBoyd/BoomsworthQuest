@@ -1,5 +1,6 @@
 using Events.ScriptableObjects;
 using SceneManagment.ScriptableObjects;
+using TMPro;
 using UI.Properties;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,10 @@ namespace UI.WindowController
 {
     public class CompletedLevelWindowController : AWindowController<LevelCompleteWindowProperties>
     {
+        
+        [SerializeField]
+        private TMP_Text m_LifeCountText;
+        
         [Header("Broadcasting On")]
         [SerializeField]
         private LoadSceneEventChannelSO m_loadmainMenu = default;
@@ -39,7 +44,11 @@ namespace UI.WindowController
 
         protected override void OnPropertiesSet()
         {
-            
+            m_LifeCountText.text = Properties.CurrentLifeData.CurrentLifeCount.ToString();
+            if(Properties.CurrentLifeData.CurrentLifeCount == 0)
+                m_nextLevelButton.interactable = false;
+            else
+                m_nextLevelButton.interactable = true;
         }
 
         protected override void WhileHiding()

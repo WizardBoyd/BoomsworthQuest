@@ -1,13 +1,18 @@
 using Events.ScriptableObjects;
 using SceneManagment.ScriptableObjects;
+using TMPro;
+using UI.Properties;
 using UnityEngine;
 using UnityEngine.UI;
 using WizardUI.Window;
 
 namespace UI.WindowController
 {
-    public class FailedLevelWindowController : AWindowController
+    public class FailedLevelWindowController : AWindowController<LevelFailWindowProperties>
     {
+        [SerializeField]
+        private TMP_Text m_LifeCountText;
+        
         [Header("Broadcasting On")]
         [SerializeField]
         private LoadSceneEventChannelSO m_loadmainMenu = default;
@@ -38,7 +43,11 @@ namespace UI.WindowController
 
         protected override void OnPropertiesSet()
         {
-           
+            m_LifeCountText.text = Properties.CurrentLifeData.CurrentLifeCount.ToString();
+           if(Properties.CurrentLifeData.CurrentLifeCount == 0)
+               m_RetryButton.interactable = false;
+           else
+               m_RetryButton.interactable = true;
         }
 
         protected override void WhileHiding()

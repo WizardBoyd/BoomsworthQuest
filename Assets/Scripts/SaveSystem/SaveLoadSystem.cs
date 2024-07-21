@@ -8,6 +8,7 @@ using DependencyInjection;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Levels.SerializableData;
+using Life.SerializableData;
 using Misc.FileManagment;
 using UnityEngine;
 using WizardOptimizations.Runtime.Singelton;
@@ -78,6 +79,7 @@ namespace SaveSystem
             serializers.Add(typeof(Vector2Int),mathSerializer);
             serializers.Add(typeof(DateTime), jsonSerializer);
             serializers.Add(typeof(List<SerializedZone>), jsonSerializer);
+            serializers.Add(typeof(CurrentLifeData) , jsonSerializer);
         }
 
         #endregion

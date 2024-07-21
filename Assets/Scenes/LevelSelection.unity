@@ -605,12 +605,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c17f23a7894ad1ab22a1c264535680, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_screenReferenceSize: {x: 1280, y: 1536}
-  m_uiScaleFactor: 1
+  m_screenReferenceSize: {x: 2048, y: 1536}
+  m_uiScaleFactor: 0.5
   m_uiSettings: {fileID: 11400000, guid: 67df52141e6f86e428cd9e8540826ba1, type: 2}
   m_CloseCurrentWindow: {fileID: 11400000, guid: bb053270b7c1709438a9b927d1bea189, type: 2}
   m_OpenSettingsWindow: {fileID: 11400000, guid: c3cac8b2065381547a02e831df033235, type: 2}
   m_OpenLanguageWindow: {fileID: 11400000, guid: cda1ad5ae843d3b489fff0bd12410dac, type: 2}
+  m_openNoRemainingLifeWindow: {fileID: 11400000, guid: 05e4f7578d6edea40a451fc01b164129, type: 2}
+  m_openGameShopWindow: {fileID: 11400000, guid: 7059f95ecb52cb74d974b0ca5ed00ca7, type: 2}
 --- !u!4 &1808049471
 Transform:
   m_ObjectHideFlags: 0

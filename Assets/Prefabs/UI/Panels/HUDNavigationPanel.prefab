@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
-  m_OnClickEvent: {fileID: 0}
+  m_OnClickEvent: {fileID: 11400000, guid: 7059f95ecb52cb74d974b0ca5ed00ca7, type: 2}
 --- !u!1 &3002271317660235294
 GameObject:
   m_ObjectHideFlags: 0

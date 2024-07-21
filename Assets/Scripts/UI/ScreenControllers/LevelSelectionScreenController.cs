@@ -2,7 +2,11 @@ using System;
 using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
+using Life;
+using Life.SerializableData;
 using SaveSystem;
+using Shop;
+using Shop.SerializableData;
 using UI.Properties;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,6 +25,8 @@ namespace UI.ScreenControllers
             public const string HUDPlayPanel = "HudPlayPanel";
             public const string GameSettingWindow = "GameSettingWindow";
             public const string LanguageSettingWindow = "LanguageSettingWindow";
+            public const string NoRemainingLife = "NoRemainingLife";
+            public const string GameShopWindow = "GameShopWindow";
         }
 
         [Header("Configuration")] 
@@ -38,10 +44,20 @@ namespace UI.ScreenControllers
         private VoidEventChannelSO m_OpenSettingsWindow = default;
         [SerializeField] 
         private VoidEventChannelSO m_OpenLanguageWindow = default;
+        [SerializeField]
+        private VoidEventChannelSO m_openNoRemainingLifeWindow = default;
+        [SerializeField]
+        private VoidEventChannelSO m_openGameShopWindow = default;
 
         private UIFrame m_uiFrame;
         [Inject]
         private TouchInputReader m_touchInputReader;
+        
+        [Inject]
+        private CurrentLifeData m_currentLifeData;
+        
+        [Inject]
+        private CurrencyData m_currencyData;
         
         private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
 
@@ -55,6 +71,10 @@ namespace UI.ScreenControllers
                 scaler.referenceResolution = m_screenReferenceSize;
                 scaler.matchWidthOrHeight = m_uiScaleFactor;
             }
+        }
+
+        private void Start()
+        {
             ShowHideCorePanels(true);
         }
 
@@ -63,30 +83,34 @@ namespace UI.ScreenControllers
            m_OpenSettingsWindow.OnEventRaised += OpenSettingWindow;
            m_CloseCurrentWindow.OnEventRaised += CloseCurrentWindow;
            m_OpenLanguageWindow.OnEventRaised += OpenLanguageWindow;
+           m_openNoRemainingLifeWindow.OnEventRaised += OpenNoRemainingLifeWindow;
+           m_openGameShopWindow.OnEventRaised += OpenGameShopWindow;
         }
-        
+
+
         private void OnDisable()
         {
             m_OpenSettingsWindow.OnEventRaised -= OpenSettingWindow;
             m_CloseCurrentWindow.OnEventRaised -= CloseCurrentWindow;
             m_OpenLanguageWindow.OnEventRaised -= OpenLanguageWindow;
+            m_openNoRemainingLifeWindow.OnEventRaised -= OpenNoRemainingLifeWindow;
+            m_openGameShopWindow.OnEventRaised -= OpenGameShopWindow;
         }
 
         private void ShowHideCorePanels(bool show)
         {
             if (show)
             {
-                m_uiFrame.ShowPanel(LevelSelectionScreenIds.HeartPanel);
-                m_uiFrame.ShowPanel(LevelSelectionScreenIds.PremiumResourcePanel);
+                m_uiFrame.ShowPanel<HeartPanelProperties>(LevelSelectionScreenIds.HeartPanel, new HeartPanelProperties(LifeManager.Instance.m_lifeTimer, m_currentLifeData));
+                m_uiFrame.ShowPanel<PremiumCurrencyDisplayProperties>(LevelSelectionScreenIds.PremiumResourcePanel,
+                    new PremiumCurrencyDisplayProperties(m_currencyData));
                 m_uiFrame.ShowPanel(LevelSelectionScreenIds.HUDNavigationPanel);
-                m_uiFrame.ShowPanel(LevelSelectionScreenIds.HUDPlayPanel);
             }
             else
             {
                 m_uiFrame.HidePanel(LevelSelectionScreenIds.HeartPanel);
                 m_uiFrame.HidePanel(LevelSelectionScreenIds.PremiumResourcePanel);
                 m_uiFrame.HidePanel(LevelSelectionScreenIds.HUDNavigationPanel);
-                m_uiFrame.HidePanel(LevelSelectionScreenIds.HUDPlayPanel);
             }
         }
 
@@ -107,6 +131,17 @@ namespace UI.ScreenControllers
         } 
         
         private void OpenLanguageWindow() => m_uiFrame.OpenWindow(LevelSelectionScreenIds.LanguageSettingWindow);
+        
+        private void OpenNoRemainingLifeWindow()
+        {
+            m_uiFrame.OpenWindow(LevelSelectionScreenIds.NoRemainingLife);
+        }
+        
+        private void OpenGameShopWindow()
+        {
+           m_uiFrame.OpenWindow<GameShopWindowProperties>(LevelSelectionScreenIds.GameShopWindow,
+               new GameShopWindowProperties(m_currencyData, ShopManager.Instance.shopItems));
+        }
 
         private void OnDestroy()
         {

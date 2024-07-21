@@ -495,6 +495,7 @@ MonoBehaviour:
     m_hideOnForegroundLost: 1
     m_windowQueuePriority: 4
     m_isPopUp: 0
+  m_LifeCountText: {fileID: 5563768979981971819}
   m_loadmainMenu: {fileID: 11400000, guid: d1a958b1171813e4e96df4ba95954330, type: 2}
   m_loadNextLevel: {fileID: 11400000, guid: 5b4ab22805abc1f4ea049be522133f69, type: 2}
   m_nextLevelButton: {fileID: 1258084217090930158}

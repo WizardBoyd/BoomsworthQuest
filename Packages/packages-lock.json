@@ -488,7 +488,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "020f141eadbd7ceaf7bb51729b23e64dcab5d8b5"
+      "hash": "d80b1d997dcf9d0be1265fd590499ca0bdcaa178"
     },
     "com.wizboyd.wizardsave": {
       "version": "https://github.com/WizardBoyd/WizardSave.git",

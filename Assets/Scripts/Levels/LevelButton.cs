@@ -2,6 +2,7 @@ using Events.ScriptableObjects;
 using Levels.Enums;
 using Levels.ScriptableObjects;
 using Levels.SerializableData;
+using Life;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -126,7 +127,10 @@ namespace Levels
 
         private void On_ButtonClicked()
         {
-            On_LevelClicked.RaiseEvent(LevelSceneSo);
+            if (LifeManager.Instance.HasRemainingLife())
+            {
+                On_LevelClicked.RaiseEvent(LevelSceneSo);
+            }
         }
     }
 }

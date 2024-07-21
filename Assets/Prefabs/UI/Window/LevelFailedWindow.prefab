@@ -832,10 +832,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_animIn: {fileID: 0}
   m_animOut: {fileID: 0}
-  m_properties:
-    m_hideOnForegroundLost: 1
-    m_windowQueuePriority: 4
-    m_isPopUp: 0
+  m_LifeCountText: {fileID: 6934534082498263485}
   m_loadmainMenu: {fileID: 11400000, guid: d1a958b1171813e4e96df4ba95954330, type: 2}
   m_RetryLevel: {fileID: 11400000, guid: d74f529ef5c13054d97bded857bf29ed, type: 2}
   m_RetryButton: {fileID: 755547745886556204}

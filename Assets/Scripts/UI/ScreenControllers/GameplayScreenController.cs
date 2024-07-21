@@ -3,6 +3,7 @@ using DependencyInjection.attributes;
 using Events.ScriptableObjects;
 using Input;
 using Levels.Enums;
+using Life.SerializableData;
 using SaveSystem;
 using UI.Properties;
 using UnityEngine;
@@ -51,6 +52,9 @@ namespace UI.ScreenControllers
         
         [Inject]
         private TouchInputReader m_touchInputReader;
+        
+        [Inject]
+        private CurrentLifeData m_currentLifeData;
         
         private AutoSaveKeyValueStoreWrapper m_autoSaveKeyValueStoreWrapper;
         
@@ -132,14 +136,14 @@ namespace UI.ScreenControllers
         private void OpenLevelCompletionWindow(LevelCompletionStatus levelCompletionStatus)
         {
             ShowHideCorePanels(false);
-            m_uiFrame.OpenWindow<LevelCompleteWindowProperties>(GameplayScreenIds.LevelCompleteWindow, new LevelCompleteWindowProperties(levelCompletionStatus));
+            m_uiFrame.OpenWindow<LevelCompleteWindowProperties>(GameplayScreenIds.LevelCompleteWindow, new LevelCompleteWindowProperties(levelCompletionStatus, m_currentLifeData));
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
         }
         
         private void OpenLevelFailedWindow()
         {
             ShowHideCorePanels(false);
-            m_uiFrame.OpenWindow(GameplayScreenIds.LevelFailedWindow);
+            m_uiFrame.OpenWindow<LevelFailWindowProperties>(GameplayScreenIds.LevelFailedWindow, new LevelFailWindowProperties(m_currentLifeData));
             m_touchInputReader.SetIsAppCurrentlyInteractable(true);
         }
         
